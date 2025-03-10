@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -15,25 +15,6 @@
       <h1>Cheap Beers</h1>
     </header>
     <div class="container">
-      
-      <!-- Sorting Controls Only -->
-      <div class="controls">
-        <div class="control-group">
-          <select id="sortBy" v-model="sortBy" class="select-control">
-            <option value="cost_per_standard">Cost per Standard</option>
-            <option value="unit_price">Unit Price</option>
-            <option value="total_price">Total Price</option>
-            <option value="standard_drinks">Standard Drinks</option>
-            <option value="percentage">Percentage</option>
-          </select>
-        </div>
-        
-        <div class="control-group">
-          <button @click="toggleSortOrder" class="btn-sort">
-            {{ sortOrder === 'asc' ? 'Ascending' : 'Descending' }}
-          </button>
-        </div>
-      </div>
       
       <!-- Beer Grid -->
       <div class="beer-grid">
@@ -58,11 +39,11 @@
         </div>
       </div>
       
-      <div v-if="filteredBeers.length === 0" class="no-results">
-        Loading data or no beers match your criteria.
+      <div v-if="beers.length === 0" class="no-results">
+        Loading data or no beers available.
       </div>
       
-      <div v-if="displayLimit < filteredBeers.length" class="load-more-container">
+      <div v-if="displayLimit < beers.length" class="load-more-container">
         <button @click="loadMore" class="btn-load-more">Load More</button>
       </div>
     </div>

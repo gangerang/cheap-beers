@@ -6,29 +6,18 @@ new Vue({
   el: '#app',
   data: {
     beers: [],
-    sortBy: 'cost_per_standard', // Default sort field.
-    sortOrder: 'asc',            // Default ascending order.
-    displayLimit: 50             // Initial number of records to show.
+    displayLimit: 50  // Initial number of records to show.
   },
   computed: {
+    // Sort beers by cost per standard drink (ascending) by default.
     filteredBeers() {
-      let result = this.beers;
-      
-      // No filtering – include all beers.
-      
-      // Sort by selected field and order.
-      if (this.sortBy) {
-        result = result.slice().sort((a, b) => {
-          let aVal = parseFloat(a[this.sortBy]);
-          let bVal = parseFloat(b[this.sortBy]);
-          if (isNaN(aVal)) aVal = 0;
-          if (isNaN(bVal)) bVal = 0;
-          const diff = aVal - bVal;
-          return this.sortOrder === 'asc' ? diff : -diff;
-        });
-      }
-      
-      return result;
+      return this.beers.slice().sort((a, b) => {
+        let aVal = parseFloat(a.cost_per_standard);
+        let bVal = parseFloat(b.cost_per_standard);
+        if (isNaN(aVal)) aVal = 0;
+        if (isNaN(bVal)) bVal = 0;
+        return aVal - bVal;
+      });
     },
     displayedBeers() {
       return this.filteredBeers.slice(0, this.displayLimit);
@@ -66,10 +55,6 @@ new Vue({
     supplierUrl(stockcode) {
       if (!stockcode) return "#";
       return `https://www.danmurphys.com.au/product/${stockcode}`;
-    },
-    // Toggle sort order between ascending and descending.
-    toggleSortOrder() {
-      this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
     },
     // Increase displayLimit by 50.
     loadMore() {

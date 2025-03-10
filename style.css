@@ -15,7 +15,7 @@
     color: inherit;
   }
   
-  /* Header - reverted to #ffac33 */
+  /* Header */
   header {
     background: #ffac33;
     color: #333;
@@ -33,44 +33,6 @@
     max-width: 1200px;
     margin: 2rem auto;
     padding: 0 1rem;
-  }
-  
-  /* Controls */
-  .controls {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 2rem;
-  }
-  .control-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0.5rem;
-  }
-  .select-control {
-    padding: 0.6rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-    background: #fff;
-  }
-  .btn-sort,
-  .btn-load-more {
-    padding: 0.6rem 1rem;
-    border: none;
-    border-radius: 4px;
-    background: #FFC107;
-    color: #333;
-    font-size: 1rem;
-    cursor: pointer;
-    margin: 0.3rem;
-    transition: background 0.3s;
-  }
-  .btn-sort:hover,
-  .btn-load-more:hover {
-    background: #FFB300;
   }
   
   /* Beer Grid */
@@ -123,12 +85,25 @@
     text-align: center;
     margin: 2rem 0;
   }
+  .btn-load-more {
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 4px;
+    background: #FFC107;
+    color: #333;
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 0.3rem;
+    transition: background 0.3s;
+  }
+  .btn-load-more:hover {
+    background: #FFB300;
+  }
   
   /* Responsive Adjustments */
   @media (max-width: 600px) {
-    .controls {
-      flex-direction: column;
-      align-items: stretch;
+    .beer-grid {
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     }
   }
   
