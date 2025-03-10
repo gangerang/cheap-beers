@@ -134,6 +134,25 @@
     margin-top: 2rem;
   }
   
+  /* Load More Button */
+  .load-more-container {
+    text-align: center;
+    margin: 2rem 0;
+  }
+  .btn-load-more {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    background: #16a085;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .btn-load-more:hover {
+    background: #138d75;
+  }
+  
   /* Responsive Adjustments */
   @media (max-width: 600px) {
     .controls {
