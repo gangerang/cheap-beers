@@ -15,9 +15,13 @@
       <h1>Cheap Beers</h1>
     </header>
     <div class="container">
-      <div class="controls">
+      <!-- Search Bar -->
+      <div class="search-container">
         <input type="text" v-model="searchQuery" placeholder="Search beers by name" class="input-search">
-        
+      </div>
+      
+      <!-- Controls -->
+      <div class="controls">
         <div class="control-group">
           <label for="sortBy">Sort by:</label>
           <select id="sortBy" v-model="sortBy" class="select-control">
@@ -36,28 +40,27 @@
           </button>
         </div>
         
-        <div class="control-group">
-          <label for="packageFilter">Package:</label>
-          <select id="packageFilter" v-model="selectedPackages" multiple class="select-control">
-            <option value="bottle">Bottle</option>
-            <option value="pack">Pack</option>
-            <option value="case">Case</option>
-          </select>
-        </div>
-        
-        <div class="control-group">
-          <label class="checkbox-label">
-            <input type="checkbox" v-model="includeSpecial">
-            Include Special Pricing
-          </label>
+        <div class="control-group package-group">
+          <span>Package:</span>
+          <button 
+            v-for="pkg in packages" 
+            :key="pkg" 
+            @click="togglePackage(pkg)"
+            :class="{'btn-toggle': true, 'active': selectedPackages.includes(pkg)}">
+            {{ pkg.charAt(0).toUpperCase() + pkg.slice(1) }}
+          </button>
         </div>
       </div>
       
+      <!-- Beer Grid -->
       <div class="beer-grid">
         <div class="beer-card" v-for="beer in displayedBeers" :key="beer.stockcode + beer.package">
-            <a :href="supplierUrl(beer.stockcode)" target="_blank">
-                <img class="beer-image" :src="getImageUrl(beer.stockcode)" :alt="beer.name" @error="handleImageError($event, beer.stockcode)">
-            </a>              
+          <a :href="supplierUrl(beer.stockcode)" target="_blank">
+            <img class="beer-image" 
+                 :src="getImageUrl(beer.stockcode)" 
+                 :alt="beer.name" 
+                 @error="handleImageError($event, beer.stockcode)">
+          </a>
           <div class="beer-content">
             <div class="beer-title">{{ beer.name }}</div>
             <div class="beer-info"><span>Stock Code:</span> {{ beer.stockcode }}</div>

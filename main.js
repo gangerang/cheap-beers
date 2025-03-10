@@ -9,8 +9,10 @@ new Vue({
     searchQuery: '',
     sortBy: 'cost_per_standard', // Default sort field.
     sortOrder: 'asc',            // Default ascending order.
+    // For package filtering, store selected packages.
     selectedPackages: [],
-    includeSpecial: false,
+    // List of all possible package types.
+    packages: ['bottle', 'pack', 'case'],
     displayLimit: 50             // Initial number of records to show.
   },
   computed: {
@@ -28,15 +30,16 @@ new Vue({
         result = result.filter(beer => beer.package && this.selectedPackages.includes(beer.package.toLowerCase()));
       }
       
-      // Exclude special pricing if not included.
-      if (!this.includeSpecial) {
-        result = result.filter(beer => beer.special.toString() === "false");
-      }
+      // All beers are included regardless of special pricing.
       
       // Sort by selected field and order.
       if (this.sortBy) {
         result = result.slice().sort((a, b) => {
-          let diff = parseFloat(a[this.sortBy]) - parseFloat(b[this.sortBy]);
+          let aVal = parseFloat(a[this.sortBy]);
+          let bVal = parseFloat(b[this.sortBy]);
+          if (isNaN(aVal)) aVal = 0;
+          if (isNaN(bVal)) bVal = 0;
+          const diff = aVal - bVal;
           return this.sortOrder === 'asc' ? diff : -diff;
         });
       }
@@ -50,6 +53,7 @@ new Vue({
   methods: {
     // Returns the default image URL using underscores as-is.
     getImageUrl(stockcode) {
+      if (!stockcode) return "";
       let code = stockcode.toString();
       if (code.startsWith("ER_")) {
         code = code.slice(3);
@@ -58,6 +62,7 @@ new Vue({
     },
     // Returns the alternative image URL with underscores replaced with hyphens.
     getAltImageUrl(stockcode) {
+      if (!stockcode) return "";
       let code = stockcode.toString();
       if (code.startsWith("ER_")) {
         code = code.slice(3);
@@ -65,7 +70,7 @@ new Vue({
       code = code.replace(/_/g, '-');
       return `https://media.danmurphys.com.au/dmo/product/${code}-1.png`;
     },
-    // On image error, if the current src is not the alternative, switch to the alternative URL.
+    // On image error, switch to the alternative URL.
     handleImageError(event, stockcode) {
       const currentSrc = event.target.src;
       const altSrc = this.getAltImageUrl(stockcode);
@@ -75,6 +80,7 @@ new Vue({
     },
     // Constructs the supplier URL based on the stockcode.
     supplierUrl(stockcode) {
+      if (!stockcode) return "#";
       return `https://www.danmurphys.com.au/product/${stockcode}`;
     },
     // Toggle sort order between ascending and descending.
@@ -85,6 +91,15 @@ new Vue({
     loadMore() {
       this.displayLimit += 50;
     },
+    // Toggle a package type in the selectedPackages array.
+    togglePackage(pkg) {
+      const index = this.selectedPackages.indexOf(pkg);
+      if (index === -1) {
+        this.selectedPackages.push(pkg);
+      } else {
+        this.selectedPackages.splice(index, 1);
+      }
+    },
     // Parse CSV using Papa Parse and filter out empty rows.
     parseCSV() {
       Papa.parse(csvUrl, {
@@ -92,7 +107,6 @@ new Vue({
         header: true,
         dynamicTyping: true,
         complete: (results) => {
-          // Filter out any empty rows (rows without a valid name)
           this.beers = results.data.filter(item => item.name);
         },
         error: (err) => {
