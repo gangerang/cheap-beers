@@ -48,10 +48,11 @@ new Vue({
     }
   },
   methods: {
-    // Build image URL. If the stock code starts with "EM_", drop that prefix.
+    // Build image URL.
+    // If the stock code starts with "ER_", drop that prefix before converting underscores to hyphens.
     imageUrl(stockcode) {
       let code = stockcode.toString();
-      if (code.startsWith("EM_")) {
+      if (code.startsWith("ER_")) {
         code = code.slice(3);
       }
       code = code.replace(/_/g, '-');
