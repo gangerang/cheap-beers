@@ -5,120 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cheap Beers</title>
   <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="style.css">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-  <!-- Vue.js -->
-  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-  <!-- Papa Parse -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
-  <style>
-    /* Reset & Global Styles */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      font-family: 'Roboto', sans-serif;
-      background-color: #f4f7f6;
-      color: #333;
-      line-height: 1.6;
-    }
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-    /* Header */
-    header {
-      background: linear-gradient(135deg, #1abc9c, #16a085);
-      color: #fff;
-      padding: 1.5rem;
-      text-align: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    header h1 {
-      font-weight: 500;
-      font-size: 2rem;
-    }
-    /* Container */
-    .container {
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-    /* Controls */
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-    }
-    .controls > * {
-      margin: 0.5rem;
-    }
-    .controls input[type="text"],
-    .controls select {
-      padding: 0.6rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 1rem;
-      background: #fff;
-    }
-    .controls label {
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-    }
-    .controls input[type="checkbox"] {
-      margin-right: 0.3rem;
-    }
-    /* Beer Grid */
-    .beer-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
-    }
-    /* Beer Card */
-    .beer-card {
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      overflow: hidden;
-      transition: transform 0.2s;
-    }
-    .beer-card:hover {
-      transform: translateY(-5px);
-    }
-    .beer-image {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-    }
-    .beer-content {
-      padding: 1rem;
-    }
-    .beer-title {
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: #16a085;
-    }
-    .beer-info {
-      font-size: 0.9rem;
-      margin-bottom: 0.3rem;
-    }
-    .beer-info span {
-      font-weight: 500;
-    }
-    /* Responsive Adjustments */
-    @media (max-width: 600px) {
-      .controls {
-        flex-direction: column;
-        align-items: stretch;
-      }
-    }
-  </style>
 </head>
 <body>
   <div id="app">
@@ -127,33 +16,43 @@
     </header>
     <div class="container">
       <div class="controls">
-        <!-- Search Input -->
-        <input type="text" v-model="searchQuery" placeholder="Search beers by name">
-        <!-- Sort Dropdown -->
-        <select v-model="sortBy">
-          <option value="">Sort by...</option>
-          <option value="cost_per_standard">Cost per Standard</option>
-          <option value="unit_price">Unit Price</option>
-          <option value="total_price">Total Price</option>
-          <option value="standard_drinks">Standard Drinks</option>
-          <option value="percentage">Percentage</option>
-        </select>
-        <!-- Package Filter (Multi-select) -->
-        <label>
-          Package:
-          <select v-model="selectedPackages" multiple>
+        <input type="text" v-model="searchQuery" placeholder="Search beers by name" class="input-search">
+        
+        <div class="control-group">
+          <label for="sortBy">Sort by:</label>
+          <select id="sortBy" v-model="sortBy" class="select-control">
+            <option value="cost_per_standard">Cost per Standard</option>
+            <option value="unit_price">Unit Price</option>
+            <option value="total_price">Total Price</option>
+            <option value="standard_drinks">Standard Drinks</option>
+            <option value="percentage">Percentage</option>
+          </select>
+        </div>
+        
+        <div class="control-group">
+          <label for="sortOrder">Order:</label>
+          <button @click="toggleSortOrder" class="btn-sort">
+            {{ sortOrder === 'asc' ? 'Ascending' : 'Descending' }}
+          </button>
+        </div>
+        
+        <div class="control-group">
+          <label for="packageFilter">Package:</label>
+          <select id="packageFilter" v-model="selectedPackages" multiple class="select-control">
             <option value="bottle">Bottle</option>
             <option value="pack">Pack</option>
             <option value="case">Case</option>
           </select>
-        </label>
-        <!-- Special Pricing Filter -->
-        <label>
-          <input type="checkbox" v-model="includeSpecial">
-          Include Special Pricing
-        </label>
+        </div>
+        
+        <div class="control-group">
+          <label class="checkbox-label">
+            <input type="checkbox" v-model="includeSpecial">
+            Include Special Pricing
+          </label>
+        </div>
       </div>
-      <!-- Beer Listing Grid -->
+      
       <div class="beer-grid">
         <div class="beer-card" v-for="beer in filteredBeers" :key="beer.stockcode + beer.package">
           <a :href="supplierUrl(beer.stockcode)" target="_blank">
@@ -173,78 +72,16 @@
           </div>
         </div>
       </div>
-      <div v-if="!filteredBeers.length" style="text-align: center; margin-top: 2rem;">
+      <div v-if="!filteredBeers.length" class="no-results">
         Loading data or no beers match your criteria.
       </div>
     </div>
   </div>
-  <script>
-    // Configuration: Update the repo name and branch as needed.
-    const dataRepo = "alculator-data";  // Fixed repo name
-    const dataBranch = "test";          // Change branch if needed
-    const csvUrl = `https://raw.githubusercontent.com/gangerang/${dataRepo}/${dataBranch}/beers.csv`;
-
-    new Vue({
-      el: '#app',
-      data: {
-        beers: [],
-        searchQuery: '',
-        sortBy: '',
-        selectedPackages: [],
-        includeSpecial: false,
-      },
-      computed: {
-        filteredBeers() {
-          let result = this.beers;
-          // Filter by search query
-          if (this.searchQuery) {
-            const query = this.searchQuery.toLowerCase();
-            result = result.filter(beer => beer.name.toLowerCase().includes(query));
-          }
-          // Filter by package types if any are selected
-          if (this.selectedPackages.length) {
-            result = result.filter(beer => this.selectedPackages.includes(beer.package.toLowerCase()));
-          }
-          // Exclude special pricing if not included
-          if (!this.includeSpecial) {
-            result = result.filter(beer => beer.special.toString() === "false");
-          }
-          // Sort if a sort field is selected
-          if (this.sortBy) {
-            result = result.slice().sort((a, b) => parseFloat(a[this.sortBy]) - parseFloat(b[this.sortBy]));
-          }
-          return result;
-        }
-      },
-      methods: {
-        // Build image URL based on stockcode.
-        imageUrl(stockcode) {
-          return `https://media.danmurphys.com.au/dmo/product/${stockcode}-1.png`;
-        },
-        // Build supplier URL based on stockcode.
-        supplierUrl(stockcode) {
-          return `https://www.danmurphys.com.au/product/${stockcode}`;
-        },
-        // Parse CSV using Papa Parse and filter out empty rows.
-        parseCSV() {
-          Papa.parse(csvUrl, {
-            download: true,
-            header: true,
-            dynamicTyping: true,
-            complete: (results) => {
-              // Filter out any empty rows (rows without a valid name)
-              this.beers = results.data.filter(item => item.name);
-            },
-            error: (err) => {
-              console.error("Error loading CSV:", err);
-            }
-          });
-        }
-      },
-      created() {
-        this.parseCSV();
-      }
-    });
-  </script>
+  
+  <!-- Vue.js -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <!-- Papa Parse -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
