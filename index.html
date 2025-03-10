@@ -23,7 +23,6 @@
       <!-- Controls -->
       <div class="controls">
         <div class="control-group">
-          <label for="sortBy">Sort by:</label>
           <select id="sortBy" v-model="sortBy" class="select-control">
             <option value="cost_per_standard">Cost per Standard</option>
             <option value="unit_price">Unit Price</option>
@@ -34,14 +33,12 @@
         </div>
         
         <div class="control-group">
-          <label for="sortOrder">Order:</label>
           <button @click="toggleSortOrder" class="btn-sort">
             {{ sortOrder === 'asc' ? 'Ascending' : 'Descending' }}
           </button>
         </div>
         
         <div class="control-group package-group">
-          <span>Package:</span>
           <button 
             v-for="pkg in packages" 
             :key="pkg" 
@@ -62,16 +59,18 @@
                  @error="handleImageError($event, beer.stockcode)">
           </a>
           <div class="beer-content">
+            <!-- New Order -->
             <div class="beer-title">{{ beer.name }}</div>
-            <div class="beer-info"><span>Stock Code:</span> {{ beer.stockcode }}</div>
-            <div class="beer-info"><span>Alcohol %:</span> {{ beer.percentage }}</div>
-            <div class="beer-info"><span>Size:</span> {{ beer.size }} ml</div>
-            <div class="beer-info"><span>Standard Drinks:</span> {{ beer.standard_drinks }}</div>
-            <div class="beer-info"><span>Special:</span> {{ beer.special }}</div>
-            <div class="beer-info"><span>Package:</span> {{ beer.package }} ({{ beer.package_size }})</div>
-            <div class="beer-info"><span>Total Price:</span> ${{ beer.total_price }}</div>
-            <div class="beer-info"><span>Unit Price:</span> ${{ beer.unit_price }}</div>
             <div class="beer-info"><span>Cost per Standard:</span> ${{ beer.cost_per_standard }}</div>
+            <div class="beer-info"><span>Unit Price:</span> ${{ beer.unit_price }}</div>
+            <div class="beer-info"><span>Total Price:</span> ${{ beer.total_price }}</div>
+            <div class="beer-info"><span>Alcohol %:</span> {{ beer.percentage }}</div>
+            <div class="beer-info"><span>Standard Drinks:</span> {{ beer.standard_drinks }}</div>
+            <div class="beer-info"><span>Size:</span> {{ beer.size }} ml</div>
+            <div class="beer-info"><span>Package:</span> {{ beer.package }} ({{ beer.package_size }})</div>
+            <div class="beer-info">
+              <span>{{ beer.special ? 'Special Price' : 'Regular Price' }}</span>
+            </div>
           </div>
         </div>
       </div>

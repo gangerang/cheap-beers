@@ -15,9 +15,9 @@
     color: inherit;
   }
   
-  /* Header - yellow beer-like color */
+  /* Header - reverted to #ffac33 */
   header {
-    background: linear-gradient(135deg, #FFD700, #FFC107);
+    background: #ffac33;
     color: #333;
     padding: 1.5rem;
     text-align: center;
@@ -62,11 +62,6 @@
     flex-direction: column;
     align-items: center;
     margin: 0.5rem;
-  }
-  .control-group label,
-  .control-group span {
-    font-size: 0.9rem;
-    margin-bottom: 0.3rem;
   }
   .select-control {
     padding: 0.6rem;
@@ -128,13 +123,14 @@
     background: #fff;
   }
   .beer-content {
-    padding: 1rem;
+    /* Reduced top padding to reduce gap between image and name */
+    padding: 0.2rem 1rem 1rem;
   }
   .beer-title {
     font-size: 1.2rem;
-    margin-bottom: 0.5rem;
+    margin: 0.1rem 0 0.5rem;
     font-weight: 500;
-    color: #FFC107;
+    color: #000;
   }
   .beer-info {
     font-size: 0.9rem;
