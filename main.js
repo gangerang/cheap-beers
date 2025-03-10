@@ -6,31 +6,15 @@ new Vue({
   el: '#app',
   data: {
     beers: [],
-    searchQuery: '',
     sortBy: 'cost_per_standard', // Default sort field.
     sortOrder: 'asc',            // Default ascending order.
-    // For package filtering, store selected packages.
-    selectedPackages: [],
-    // List of all possible package types.
-    packages: ['bottle', 'pack', 'case'],
     displayLimit: 50             // Initial number of records to show.
   },
   computed: {
     filteredBeers() {
       let result = this.beers;
       
-      // Filter by search query.
-      if (this.searchQuery) {
-        const query = this.searchQuery.trim().toLowerCase();
-        result = result.filter(beer => beer.name && beer.name.trim().toLowerCase().includes(query));
-      }
-      
-      // Filter by package types if any are selected.
-      if (this.selectedPackages.length) {
-        result = result.filter(beer => beer.package && this.selectedPackages.includes(beer.package.toLowerCase()));
-      }
-      
-      // All beers are included regardless of special pricing.
+      // No filtering – include all beers.
       
       // Sort by selected field and order.
       if (this.sortBy) {
@@ -90,15 +74,6 @@ new Vue({
     // Increase displayLimit by 50.
     loadMore() {
       this.displayLimit += 50;
-    },
-    // Toggle a package type in the selectedPackages array.
-    togglePackage(pkg) {
-      const index = this.selectedPackages.indexOf(pkg);
-      if (index === -1) {
-        this.selectedPackages.push(pkg);
-      } else {
-        this.selectedPackages.splice(index, 1);
-      }
     },
     // Parse CSV using Papa Parse and filter out empty rows.
     parseCSV() {

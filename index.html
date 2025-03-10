@@ -15,12 +15,8 @@
       <h1>Cheap Beers</h1>
     </header>
     <div class="container">
-      <!-- Search Bar -->
-      <div class="search-container">
-        <input type="text" v-model="searchQuery" placeholder="Search beers by name" class="input-search">
-      </div>
       
-      <!-- Controls -->
+      <!-- Sorting Controls Only -->
       <div class="controls">
         <div class="control-group">
           <select id="sortBy" v-model="sortBy" class="select-control">
@@ -37,16 +33,6 @@
             {{ sortOrder === 'asc' ? 'Ascending' : 'Descending' }}
           </button>
         </div>
-        
-        <div class="control-group package-group">
-          <button 
-            v-for="pkg in packages" 
-            :key="pkg" 
-            @click="togglePackage(pkg)"
-            :class="{'btn-toggle': true, 'active': selectedPackages.includes(pkg)}">
-            {{ pkg.charAt(0).toUpperCase() + pkg.slice(1) }}
-          </button>
-        </div>
       </div>
       
       <!-- Beer Grid -->
@@ -59,7 +45,6 @@
                  @error="handleImageError($event, beer.stockcode)">
           </a>
           <div class="beer-content">
-            <!-- New Order -->
             <div class="beer-title">{{ beer.name }}</div>
             <div class="beer-info"><span>Cost per Standard:</span> ${{ beer.cost_per_standard }}</div>
             <div class="beer-info"><span>Unit Price:</span> ${{ beer.unit_price }}</div>
@@ -68,9 +53,7 @@
             <div class="beer-info"><span>Standard Drinks:</span> {{ beer.standard_drinks }}</div>
             <div class="beer-info"><span>Size:</span> {{ beer.size }} ml</div>
             <div class="beer-info"><span>Package:</span> {{ beer.package }} ({{ beer.package_size }})</div>
-            <div class="beer-info">
-              <span>{{ beer.special ? 'Special Price' : 'Regular Price' }}</span>
-            </div>
+            <div class="beer-info"><span>{{ beer.special ? 'Special Price' : 'Regular Price' }}</span></div>
           </div>
         </div>
       </div>
