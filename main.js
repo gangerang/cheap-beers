@@ -48,9 +48,16 @@ new Vue({
     }
   },
   methods: {
-    // Build image URL.
-    // If the stock code starts with "ER_", drop that prefix before converting underscores to hyphens.
-    imageUrl(stockcode) {
+    // Returns the default image URL using underscores as-is.
+    getImageUrl(stockcode) {
+      let code = stockcode.toString();
+      if (code.startsWith("ER_")) {
+        code = code.slice(3);
+      }
+      return `https://media.danmurphys.com.au/dmo/product/${code}-1.png`;
+    },
+    // Returns the alternative image URL with underscores replaced with hyphens.
+    getAltImageUrl(stockcode) {
       let code = stockcode.toString();
       if (code.startsWith("ER_")) {
         code = code.slice(3);
@@ -58,7 +65,15 @@ new Vue({
       code = code.replace(/_/g, '-');
       return `https://media.danmurphys.com.au/dmo/product/${code}-1.png`;
     },
-    // Build supplier URL based on stockcode.
+    // On image error, if the current src is not the alternative, switch to the alternative URL.
+    handleImageError(event, stockcode) {
+      const currentSrc = event.target.src;
+      const altSrc = this.getAltImageUrl(stockcode);
+      if (currentSrc !== altSrc) {
+        event.target.src = altSrc;
+      }
+    },
+    // Constructs the supplier URL based on the stockcode.
     supplierUrl(stockcode) {
       return `https://www.danmurphys.com.au/product/${stockcode}`;
     },

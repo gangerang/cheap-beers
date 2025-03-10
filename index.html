@@ -55,9 +55,9 @@
       
       <div class="beer-grid">
         <div class="beer-card" v-for="beer in displayedBeers" :key="beer.stockcode + beer.package">
-          <a :href="supplierUrl(beer.stockcode)" target="_blank">
-            <img class="beer-image" :src="imageUrl(beer.stockcode)" :alt="beer.name">
-          </a>
+            <a :href="supplierUrl(beer.stockcode)" target="_blank">
+                <img class="beer-image" :src="getImageUrl(beer.stockcode)" :alt="beer.name" @error="handleImageError($event, beer.stockcode)">
+            </a>              
           <div class="beer-content">
             <div class="beer-title">{{ beer.name }}</div>
             <div class="beer-info"><span>Stock Code:</span> {{ beer.stockcode }}</div>
