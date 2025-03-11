@@ -8,7 +8,7 @@ new Vue({
     searchQuery: "",
     displayLimit: LOAD_COUNT,
     includeSpecials: true,  // Specials are included by default.
-    selectedPackages: ["bottle", "pack", "case"]  // All package types selected by default.
+    selectedPackages: ["single", "pack", "case"]  // All package types selected by default.
   },
   computed: {
     // Filter out invalid items, online_only beers, apply search, and then filter by specials and package.
@@ -105,11 +105,21 @@ new Vue({
     formatPrice(value) {
       const num = parseFloat(value);
       if (isNaN(num)) return "N/A";
-      // Check if number is integer
       if (num === Math.floor(num)) {
         return num.toString();
       }
       return num.toFixed(2);
+    },
+    // Returns packaging info based on beer type.
+    packagingInfo(beer) {
+      const size = beer.size;
+      const vessel = beer.vessel ? beer.vessel.toLowerCase() : "bottle";
+      const pkg = (beer.package || "").toLowerCase();
+      if (pkg === "single") {
+        return `${size}mL ${vessel}`;
+      } else {
+        return `${beer.package_size} x ${size}mL ${vessel}`;
+      }
     }
   },
   created() {

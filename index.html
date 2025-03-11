@@ -24,7 +24,7 @@
       <!-- Filter Buttons -->
       <div class="filter-buttons">
          <button class="filter-button" :class="{'active': includeSpecials}" @click="toggleSpecials">Specials</button>
-         <button class="filter-button" :class="{'active': selectedPackages.includes('bottle')}" @click="togglePackage('bottle')">Bottles</button>
+         <button class="filter-button" :class="{'active': selectedPackages.includes('single')}" @click="togglePackage('single')">Singles</button>
          <button class="filter-button" :class="{'active': selectedPackages.includes('pack')}" @click="togglePackage('pack')">Packs</button>
          <button class="filter-button" :class="{'active': selectedPackages.includes('case')}" @click="togglePackage('case')">Cases</button>
       </div>
@@ -43,31 +43,21 @@
           <a v-if="beer.stockcode" :href="supplierUrl(beer.stockcode)" target="_blank">
             <img class="beer-image"
                  :src="getImageUrl(beer.stockcode)"
-                 :alt="beer.name || 'Beer'"
+                 :alt="beer.name_clean || 'Beer'"
                  @error="handleImageError($event, beer.stockcode)">
           </a>
           <div v-else class="beer-image placeholder-image">No Image</div>
           
           <div class="beer-content">
-            <div class="beer-title">{{ beer.name || 'Unnamed Beer' }}</div>
+            <div class="beer-title">{{ beer.name_clean }}</div>
+            <div class="beer-info"><span>Type:</span> {{ packagingInfo(beer) }}</div>
+            <div class="beer-info"><span>Cost per standard:</span> ${{ formatPrice(beer.cost_per_standard) }}</div>
+            <div class="beer-info"><span>Unit price:</span> ${{ formatPrice(beer.unit_price) }}</div>
             <div class="beer-info">
-              <span>Cost per Standard:</span> ${{ formatPrice(beer.cost_per_standard) }}
-            </div>
-            <div class="beer-info">
-              <span>Unit Price:</span> ${{ formatPrice(beer.unit_price) }}
-            </div>
-            <div class="beer-info">
-              <span>Total Price:</span> ${{ formatPrice(beer.total_price) }}
+              <span>Total price:</span> ${{ formatPrice(beer.total_price) }}{{ beer.special ? "on special" : "" }}
             </div>
             <div class="beer-info"><span>Alcohol %:</span> {{ beer.percentage || 'N/A' }}</div>
-            <div class="beer-info"><span>Standard Drinks:</span> {{ beer.standard_drinks || 'N/A' }}</div>
-            <div class="beer-info"><span>Size:</span> {{ beer.size || 'N/A' }} ml</div>
-            <div class="beer-info">
-              <span>Package:</span> {{ beer.package || 'N/A' }} ({{ beer.package_size || 'N/A' }})
-            </div>
-            <div class="beer-info">
-              <span>{{ beer.special ? 'Special Price' : 'Regular Price' }}</span>
-            </div>
+            <div class="beer-info"><span>Standard drinks:</span> {{ beer.standard_drinks || 'N/A' }}</div>
           </div>
         </div>
       </div>
