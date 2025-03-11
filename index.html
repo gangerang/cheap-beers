@@ -50,14 +50,24 @@
           
           <div class="beer-content">
             <div class="beer-title">{{ beer.name || 'Unnamed Beer' }}</div>
-            <div class="beer-info"><span>Cost per Standard:</span> ${{ beer.cost_per_standard || 'N/A' }}</div>
-            <div class="beer-info"><span>Unit Price:</span> ${{ beer.unit_price || 'N/A' }}</div>
-            <div class="beer-info"><span>Total Price:</span> ${{ beer.total_price || 'N/A' }}</div>
+            <div class="beer-info">
+              <span>Cost per Standard:</span> ${{ formatPrice(beer.cost_per_standard) }}
+            </div>
+            <div class="beer-info">
+              <span>Unit Price:</span> ${{ formatPrice(beer.unit_price) }}
+            </div>
+            <div class="beer-info">
+              <span>Total Price:</span> ${{ formatPrice(beer.total_price) }}
+            </div>
             <div class="beer-info"><span>Alcohol %:</span> {{ beer.percentage || 'N/A' }}</div>
             <div class="beer-info"><span>Standard Drinks:</span> {{ beer.standard_drinks || 'N/A' }}</div>
             <div class="beer-info"><span>Size:</span> {{ beer.size || 'N/A' }} ml</div>
-            <div class="beer-info"><span>Package:</span> {{ beer.package || 'N/A' }} ({{ beer.package_size || 'N/A' }})</div>
-            <div class="beer-info"><span>{{ beer.special ? 'Special Price' : 'Regular Price' }}</span></div>
+            <div class="beer-info">
+              <span>Package:</span> {{ beer.package || 'N/A' }} ({{ beer.package_size || 'N/A' }})
+            </div>
+            <div class="beer-info">
+              <span>{{ beer.special ? 'Special Price' : 'Regular Price' }}</span>
+            </div>
           </div>
         </div>
       </div>

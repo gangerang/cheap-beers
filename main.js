@@ -64,13 +64,13 @@ new Vue({
       code = code.replace(/_/g, '-');
       return `https://media.danmurphys.com.au/dmo/product/${code}-1.png`;
     },
-    // Modified error handler: try alt URL, and if that fails, show a question mark SVG.
+    // If both the default and alt URLs fail, show a fallback with a beer emoji (60% size).
     handleImageError(event, stockcode) {
       const altSrc = this.getAltImageUrl(stockcode);
       if (event.target.src !== altSrc) {
         event.target.src = altSrc;
       } else {
-        event.target.src = "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2280%22>?</text></svg>";
+        event.target.src = "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2248%22>🍺</text></svg>";
       }
     },
     supplierUrl(stockcode) {
@@ -101,6 +101,15 @@ new Vue({
     },
     clearSearch() {
       this.searchQuery = "";
+    },
+    formatPrice(value) {
+      const num = parseFloat(value);
+      if (isNaN(num)) return "N/A";
+      // Check if number is integer
+      if (num === Math.floor(num)) {
+        return num.toString();
+      }
+      return num.toFixed(2);
     }
   },
   created() {
