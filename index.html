@@ -21,12 +21,20 @@
          <input type="text" v-model="searchQuery" placeholder="find your beer..." class="input-search">
       </div>
       
-      <!-- Filter Buttons -->
+      <!-- First Row of Filter Buttons (Specials, Singles, Packs, Cases) -->
       <div class="filter-buttons">
          <button class="filter-button" :class="{'active': includeSpecials}" @click="toggleSpecials">Specials</button>
          <button class="filter-button" :class="{'active': selectedPackages.includes('single')}" @click="togglePackage('single')">Singles</button>
          <button class="filter-button" :class="{'active': selectedPackages.includes('pack')}" @click="togglePackage('pack')">Packs</button>
          <button class="filter-button" :class="{'active': selectedPackages.includes('case')}" @click="togglePackage('case')">Cases</button>
+      </div>
+      
+      <!-- Second Row of Vessel Filter Buttons (Reset, Can, Bottle, Longneck) -->
+      <div class="vessel-buttons">
+         <button class="filter-button reset-button" @click="resetFilters">Reset</button>
+         <button class="filter-button" :class="{'active': selectedVessels.includes('can')}" @click="toggleVessel('can')">Can</button>
+         <button class="filter-button" :class="{'active': selectedVessels.includes('bottle')}" @click="toggleVessel('bottle')">Bottle</button>
+         <button class="filter-button" :class="{'active': selectedVessels.includes('longneck')}" @click="toggleVessel('longneck')">Longneck</button>
       </div>
       
       <!-- No Results or Loading Message -->
@@ -54,7 +62,7 @@
             <div class="beer-info"><span>Cost per standard:</span> ${{ formatPrice(beer.cost_per_standard) }}</div>
             <div class="beer-info"><span>Unit price:</span> ${{ formatPrice(beer.unit_price) }}</div>
             <div class="beer-info">
-              <span>Total price:</span> ${{ formatPrice(beer.total_price) }}{{ beer.special ? "on special" : "" }}
+              <span>Total price:</span> ${{ formatPrice(beer.total_price) }}{{ beer.special ? " on special" : "" }}
             </div>
             <div class="beer-info"><span>Alcohol %:</span> {{ beer.percentage || 'N/A' }}</div>
             <div class="beer-info"><span>Standard drinks:</span> {{ beer.standard_drinks || 'N/A' }}</div>

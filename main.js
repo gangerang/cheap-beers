@@ -8,10 +8,11 @@ new Vue({
     searchQuery: "",
     displayLimit: LOAD_COUNT,
     includeSpecials: true,  // Specials are included by default.
-    selectedPackages: ["single", "pack", "case"]  // All package types selected by default.
+    selectedPackages: ["single", "pack", "case"],  // All package types selected by default.
+    selectedVessels: ["can", "bottle", "longneck"]  // All vessel types selected by default.
   },
   computed: {
-    // Filter out invalid items, online_only beers, apply search, and then filter by specials and package.
+    // Filter out invalid items, online_only beers, apply search, then filter by specials, package and vessel.
     filteredBeers() {
       let available = this.beers.filter(beer => {
         return beer && typeof beer === "object" &&
@@ -28,13 +29,23 @@ new Vue({
         available = available.filter(beer => beer.special === false);
       }
       
-      // If no package option is selected, show no beers.
+      // Filter by package.
       if (this.selectedPackages.length === 0) {
         available = [];
       } else {
         available = available.filter(beer => {
           let pkg = (beer.package || "").toLowerCase();
           return this.selectedPackages.includes(pkg);
+        });
+      }
+      
+      // Filter by vessel. Default vessel is "bottle" if not provided.
+      if (this.selectedVessels.length === 0) {
+        available = [];
+      } else {
+        available = available.filter(beer => {
+          let vessel = (beer.vessel || "bottle").toLowerCase();
+          return this.selectedVessels.includes(vessel);
         });
       }
       
@@ -64,7 +75,6 @@ new Vue({
       code = code.replace(/_/g, '-');
       return `https://media.danmurphys.com.au/dmo/product/${code}-1.png`;
     },
-    // If both the default and alt URLs fail, show a fallback with a beer emoji (60% size).
     handleImageError(event, stockcode) {
       const altSrc = this.getAltImageUrl(stockcode);
       if (event.target.src !== altSrc) {
@@ -90,6 +100,20 @@ new Vue({
       } else {
         this.selectedPackages.splice(index, 1);
       }
+    },
+    toggleVessel(vessel) {
+      const index = this.selectedVessels.indexOf(vessel);
+      if (index === -1) {
+        this.selectedVessels.push(vessel);
+      } else {
+        this.selectedVessels.splice(index, 1);
+      }
+    },
+    resetFilters() {
+      this.searchQuery = "";
+      this.includeSpecials = true;
+      this.selectedPackages = ["single", "pack", "case"];
+      this.selectedVessels = ["can", "bottle", "longneck"];
     },
     fetchData() {
       fetch(dataUrl)
