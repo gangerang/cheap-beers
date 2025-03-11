@@ -13,6 +13,7 @@ new Vue({
   },
   computed: {
     filteredBeers: function() {
+      console.log("includeSpecials:", this.includeSpecials);
       var available = this.beers.filter(function(beer) {
         return beer && typeof beer === "object" &&
                beer.name && typeof beer.name === "string" &&
