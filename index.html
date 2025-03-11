@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cheap Beers</title>
-  <!-- Favicon using SVG data URI -->
+  <!-- Favicon using SVG emoji (🍺) -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍺</text></svg>">
   <link rel="stylesheet" href="style.css">
   <!-- Google Fonts -->
@@ -18,15 +18,21 @@
     <div class="container">
       <!-- Search Box -->
       <div class="search-container">
-         <input type="text" v-model="searchQuery" placeholder="search away" class="input-search">
+         <input type="text" v-model="searchQuery" placeholder="find your beer..." class="input-search">
       </div>
       
-      <!-- No Results Message -->
+      <!-- Filter Buttons -->
+      <div class="filter-buttons">
+         <button class="filter-button" :class="{'active': includeSpecials}" @click="toggleSpecials">Specials</button>
+         <button class="filter-button" :class="{'active': selectedPackages.includes('bottle')}" @click="togglePackage('bottle')">Bottles</button>
+         <button class="filter-button" :class="{'active': selectedPackages.includes('pack')}" @click="togglePackage('pack')">Packs</button>
+         <button class="filter-button" :class="{'active': selectedPackages.includes('case')}" @click="togglePackage('case')">Cases</button>
+      </div>
+      
+      <!-- No Results or Loading Message -->
       <div v-if="displayedBeers.length === 0 && searchQuery && beers.length > 0" class="no-results">
         No beers match your search query.
       </div>
-      
-      <!-- Loading Message -->
       <div v-if="beers.length === 0" class="no-results">
          Loading data or no beers available.
       </div>
