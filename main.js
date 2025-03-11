@@ -12,137 +12,150 @@ new Vue({
     selectedVessels: ["can", "bottle", "longneck"]   // All vessel types selected by default.
   },
   computed: {
-    filteredBeers() {
-      let available = this.beers.filter(beer => {
+    filteredBeers: function() {
+      var available = this.beers.filter(function(beer) {
         return beer && typeof beer === "object" &&
                beer.name && typeof beer.name === "string" &&
                beer.online_only !== true;
       });
       
       if (this.searchQuery) {
-        const query = this.searchQuery.trim().toLowerCase();
-        available = available.filter(beer => beer.name.toLowerCase().includes(query));
+        var query = this.searchQuery.trim().toLowerCase();
+        available = available.filter(function(beer) {
+          return beer.name.toLowerCase().indexOf(query) !== -1;
+        });
       }
       
       if (!this.includeSpecials) {
-        available = available.filter(beer => beer.special === false);
+        available = available.filter(function(beer) {
+          return beer.special === false;
+        });
       }
       
       if (this.selectedPackages.length === 0) {
         available = [];
       } else {
-        available = available.filter(beer => {
-          let pkg = (beer.package || "").toLowerCase();
-          return this.selectedPackages.includes(pkg);
-        });
+        available = available.filter(function(beer) {
+          var pkg = (beer.package || "").toLowerCase();
+          return this.selectedPackages.indexOf(pkg) !== -1;
+        }.bind(this));
       }
       
       if (this.selectedVessels.length === 0) {
         available = [];
       } else {
-        available = available.filter(beer => {
-          let vessel = (beer.vessel || "bottle").toLowerCase();
-          return this.selectedVessels.includes(vessel);
-        });
+        available = available.filter(function(beer) {
+          var vessel = (beer.vessel || "bottle").toLowerCase();
+          return this.selectedVessels.indexOf(vessel) !== -1;
+        }.bind(this));
       }
       
-      return available.slice().sort((a, b) => {
-        let aVal = (a.cost_per_standard != null) ? parseFloat(a.cost_per_standard) : 0;
-        let bVal = (b.cost_per_standard != null) ? parseFloat(b.cost_per_standard) : 0;
+      return available.slice().sort(function(a, b) {
+        var aVal = (a.cost_per_standard != null) ? parseFloat(a.cost_per_standard) : 0;
+        var bVal = (b.cost_per_standard != null) ? parseFloat(b.cost_per_standard) : 0;
         if (isNaN(aVal)) aVal = 0;
         if (isNaN(bVal)) bVal = 0;
         return aVal - bVal;
       });
     },
-    displayedBeers() {
+    displayedBeers: function() {
       return this.filteredBeers.slice(0, this.displayLimit);
     }
   },
   methods: {
-    getImageUrl(stockcode) {
+    getImageUrl: function(stockcode) {
       if (!stockcode) return "";
-      let code = stockcode.toString();
-      if (code.startsWith("ER_")) code = code.slice(3);
-      return `https://media.danmurphys.com.au/dmo/product/${code}-1.png`;
+      var code = stockcode.toString();
+      if (code.indexOf("ER_") === 0) {
+        code = code.slice(3);
+      }
+      return "https://media.danmurphys.com.au/dmo/product/" + code + "-1.png";
     },
-    getAltImageUrl(stockcode) {
+    getAltImageUrl: function(stockcode) {
       if (!stockcode) return "";
-      let code = stockcode.toString();
-      if (code.startsWith("ER_")) code = code.slice(3);
+      var code = stockcode.toString();
+      if (code.indexOf("ER_") === 0) {
+        code = code.slice(3);
+      }
       code = code.replace(/_/g, '-');
-      return `https://media.danmurphys.com.au/dmo/product/${code}-1.png`;
+      return "https://media.danmurphys.com.au/dmo/product/" + code + "-1.png";
     },
-    handleImageError(event, stockcode) {
-      const altSrc = this.getAltImageUrl(stockcode);
+    handleImageError: function(event, stockcode) {
+      var altSrc = this.getAltImageUrl(stockcode);
       if (event.target.src !== altSrc) {
         event.target.src = altSrc;
       } else {
         event.target.src = "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2248%22>🍺</text></svg>";
       }
     },
-    supplierUrl(stockcode) {
+    supplierUrl: function(stockcode) {
       if (!stockcode) return "#";
-      return `https://www.danmurphys.com.au/product/${stockcode}`;
+      return "https://www.danmurphys.com.au/product/" + stockcode;
     },
-    loadMore() {
+    loadMore: function() {
       this.displayLimit += LOAD_COUNT;
     },
-    toggleSpecials() {
+    toggleSpecials: function() {
       this.includeSpecials = !this.includeSpecials;
     },
-    togglePackage(pkg) {
-      const index = this.selectedPackages.indexOf(pkg);
+    togglePackage: function(pkg) {
+      var index = this.selectedPackages.indexOf(pkg);
       if (index === -1) {
         this.selectedPackages.push(pkg);
       } else {
         this.selectedPackages.splice(index, 1);
       }
     },
-    toggleVessel(vessel) {
-      const index = this.selectedVessels.indexOf(vessel);
+    toggleVessel: function(vessel) {
+      var index = this.selectedVessels.indexOf(vessel);
       if (index === -1) {
         this.selectedVessels.push(vessel);
       } else {
         this.selectedVessels.splice(index, 1);
       }
     },
-    resetFilters() {
+    resetFilters: function() {
       this.searchQuery = "";
       this.includeSpecials = true;
       this.selectedPackages = ["single", "pack", "case"];
       this.selectedVessels = ["can", "bottle", "longneck"];
     },
-    fetchData() {
+    fetchData: function() {
+      var self = this;
       fetch(dataUrl)
-        .then(response => response.json())
-        .then(data => {
-          this.beers = Array.isArray(data) ? data.filter(item => item && item.name) : [];
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
+          self.beers = Array.isArray(data) ? data.filter(function(item) {
+            return item && item.name;
+          }) : [];
         })
-        .catch(error => console.error("Error loading JSON data:", error));
+        .catch(function(error) {
+          console.error("Error loading JSON data:", error);
+        });
     },
-    clearSearch() {
+    clearSearch: function() {
       this.searchQuery = "";
     },
-    formatPrice(value) {
-      const num = parseFloat(value);
+    formatPrice: function(value) {
+      var num = parseFloat(value);
       if (isNaN(num)) return "N/A";
       if (num === Math.floor(num)) {
         return num.toString();
       }
       return num.toFixed(2);
     },
-    packagingInfo(beer) {
-      const size = beer.size;
-      const vessel = beer.vessel ? beer.vessel.toLowerCase() : "bottle";
-      const pkg = (beer.package || "").toLowerCase();
+    packagingInfo: function(beer) {
+      var size = beer.size;
+      var vessel = beer.vessel ? beer.vessel.toLowerCase() : "bottle";
+      var pkg = (beer.package || "").toLowerCase();
       if (pkg === "single") {
-        return `${size}mL ${vessel}`;
+        return size + "mL " + vessel;
       } else {
-        return `${beer.package_size} x ${size}mL ${vessel}`;
+        return beer.package_size + " x " + size + "mL " + vessel;
       }
     }
   },
-  created() {
+  created: function() {
     this.fetchData();
   }
 });

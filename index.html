@@ -27,9 +27,9 @@
       <div class="row">
         <div class="fixed-width filter-row">
           <button class="filter-button" :class="{'active': includeSpecials}" @click="toggleSpecials">Specials</button>
-          <button class="filter-button" :class="{'active': selectedPackages.includes('single')}" @click="togglePackage('single')">Singles</button>
-          <button class="filter-button" :class="{'active': selectedPackages.includes('pack')}" @click="togglePackage('pack')">Packs</button>
-          <button class="filter-button" :class="{'active': selectedPackages.includes('case')}" @click="togglePackage('case')">Cases</button>
+          <button class="filter-button" :class="{'active': selectedPackages.indexOf('single') !== -1}" @click="togglePackage('single')">Singles</button>
+          <button class="filter-button" :class="{'active': selectedPackages.indexOf('pack') !== -1}" @click="togglePackage('pack')">Packs</button>
+          <button class="filter-button" :class="{'active': selectedPackages.indexOf('case') !== -1}" @click="togglePackage('case')">Cases</button>
         </div>
       </div>
       
@@ -37,9 +37,9 @@
       <div class="row">
         <div class="fixed-width filter-row">
           <button class="filter-button reset-button" @click="resetFilters">Reset</button>
-          <button class="filter-button" :class="{'active': selectedVessels.includes('can')}" @click="toggleVessel('can')">Can</button>
-          <button class="filter-button" :class="{'active': selectedVessels.includes('bottle')}" @click="toggleVessel('bottle')">Bottle</button>
-          <button class="filter-button" :class="{'active': selectedVessels.includes('longneck')}" @click="toggleVessel('longneck')">Longneck</button>
+          <button class="filter-button" :class="{'active': selectedVessels.indexOf('can') !== -1}" @click="toggleVessel('can')">Can</button>
+          <button class="filter-button" :class="{'active': selectedVessels.indexOf('bottle') !== -1}" @click="toggleVessel('bottle')">Bottle</button>
+          <button class="filter-button" :class="{'active': selectedVessels.indexOf('longneck') !== -1}" @click="toggleVessel('longneck')">Longneck</button>
         </div>
       </div>
       
