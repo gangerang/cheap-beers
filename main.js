@@ -64,11 +64,13 @@ new Vue({
       code = code.replace(/_/g, '-');
       return `https://media.danmurphys.com.au/dmo/product/${code}-1.png`;
     },
+    // Modified error handler: try alt URL, and if that fails, show a question mark SVG.
     handleImageError(event, stockcode) {
-      const currentSrc = event.target.src;
       const altSrc = this.getAltImageUrl(stockcode);
-      if (currentSrc !== altSrc) {
+      if (event.target.src !== altSrc) {
         event.target.src = altSrc;
+      } else {
+        event.target.src = "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2280%22>?</text></svg>";
       }
     },
     supplierUrl(stockcode) {
