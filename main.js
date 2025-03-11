@@ -1,6 +1,4 @@
-const dataRepo = "alculator-data";  // Correct repo name.
-const dataBranch = "test";          // Change branch if needed.
-const csvUrl = `https://raw.githubusercontent.com/gangerang/${dataRepo}/${dataBranch}/beers.csv`;
+const dataUrl = "https://raw.githubusercontent.com/gangerang/alculator-data/master/beer_corrected.json";
 
 new Vue({
   el: '#app',
@@ -9,7 +7,7 @@ new Vue({
     displayLimit: 50  // Initial number of records to show.
   },
   computed: {
-    // Sort beers by cost per standard drink (ascending) by default.
+    // Sort beers by cost_per_standard ascending (cheapest first)
     filteredBeers() {
       return this.beers.slice().sort((a, b) => {
         let aVal = parseFloat(a.cost_per_standard);
@@ -60,22 +58,18 @@ new Vue({
     loadMore() {
       this.displayLimit += 50;
     },
-    // Parse CSV using Papa Parse and filter out empty rows.
-    parseCSV() {
-      Papa.parse(csvUrl, {
-        download: true,
-        header: true,
-        dynamicTyping: true,
-        complete: (results) => {
-          this.beers = results.data.filter(item => item.name);
-        },
-        error: (err) => {
-          console.error("Error loading CSV:", err);
-        }
-      });
+    // Fetch the JSON data.
+    fetchData() {
+      fetch(dataUrl)
+        .then(response => response.json())
+        .then(data => {
+          // Filter out any records that don't have a valid name.
+          this.beers = data.filter(item => item.name);
+        })
+        .catch(error => console.error("Error loading JSON data:", error));
     }
   },
   created() {
-    this.parseCSV();
+    this.fetchData();
   }
 });

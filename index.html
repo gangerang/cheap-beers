@@ -1,4 +1,4 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -34,7 +34,9 @@
             <div class="beer-info"><span>Standard Drinks:</span> {{ beer.standard_drinks }}</div>
             <div class="beer-info"><span>Size:</span> {{ beer.size }} ml</div>
             <div class="beer-info"><span>Package:</span> {{ beer.package }} ({{ beer.package_size }})</div>
-            <div class="beer-info"><span>{{ beer.special ? 'Special Price' : 'Regular Price' }}</span></div>
+            <div class="beer-info">
+              <span>{{ beer.special ? 'Special Price' : 'Regular Price' }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -51,8 +53,6 @@
   
   <!-- Vue.js -->
   <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-  <!-- Papa Parse -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
