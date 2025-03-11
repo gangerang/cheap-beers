@@ -4,7 +4,7 @@ new Vue({
   el: '#app',
   data: {
     beers: [],
-    displayLimit: 50  // Initial number of records to show.
+    displayLimit: 48  // Initial number of records to show.
   },
   computed: {
     // First filter out online-only beers, then sort by cost_per_standard ascending.
@@ -55,9 +55,9 @@ new Vue({
       if (!stockcode) return "#";
       return `https://www.danmurphys.com.au/product/${stockcode}`;
     },
-    // Increase displayLimit by 50.
+    // Increase displayLimit by 48.
     loadMore() {
-      this.displayLimit += 50;
+      this.displayLimit += 48;
     },
     // Fetch the JSON data.
     fetchData() {
