@@ -7,9 +7,10 @@ new Vue({
     displayLimit: 50  // Initial number of records to show.
   },
   computed: {
-    // Sort beers by cost_per_standard ascending (cheapest first)
+    // First filter out online-only beers, then sort by cost_per_standard ascending.
     filteredBeers() {
-      return this.beers.slice().sort((a, b) => {
+      const availableBeers = this.beers.filter(beer => !beer.online_only);
+      return availableBeers.slice().sort((a, b) => {
         let aVal = parseFloat(a.cost_per_standard);
         let bVal = parseFloat(b.cost_per_standard);
         if (isNaN(aVal)) aVal = 0;
