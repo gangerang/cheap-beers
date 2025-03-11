@@ -15,42 +15,67 @@
       <h1>Cheap Beers</h1>
     </header>
     <div class="container">
+      <!-- Search Box -->
+      <div class="search-container">
+         <input type="text" v-model="searchQuery" placeholder="search away" class="input-search">
+         <button v-if="searchQuery" @click="clearSearch" class="btn-clear-search">Clear</button>
+      </div>
       
+      <!-- No Results Message -->
+      <div v-if="displayedBeers.length === 0 && searchQuery && beers.length > 0" class="no-results">
+        No beers match your search query.
+      </div>
+      
+      <!-- Loading Message -->
+      <div v-if="beers.length === 0" class="no-results">
+         Loading data or no beers available.
+      </div>
+     
       <!-- Beer Grid -->
-      <div class="beer-grid">
-        <div class="beer-card" v-for="beer in displayedBeers" :key="beer.stockcode + beer.package">
-          <a :href="supplierUrl(beer.stockcode)" target="_blank">
-            <img class="beer-image" 
-                 :src="getImageUrl(beer.stockcode)" 
-                 :alt="beer.name" 
+      <div class="beer-grid" v-if="displayedBeers.length > 0">
+        <div class="beer-card" v-for="(beer, index) in displayedBeers" :key="(beer.stockcode || '') + (beer.package || '') + index">
+          <a v-if="beer.stockcode" :href="supplierUrl(beer.stockcode)" target="_blank">
+            <img class="beer-image"
+                 :src="getImageUrl(beer.stockcode)"
+                 :alt="beer.name || 'Beer'"
                  @error="handleImageError($event, beer.stockcode)">
           </a>
+          <div v-else class="beer-image placeholder-image">No Image</div>
+          
           <div class="beer-content">
-            <div class="beer-title">{{ beer.name }}</div>
-            <div class="beer-info"><span>Cost per Standard:</span> ${{ beer.cost_per_standard }}</div>
-            <div class="beer-info"><span>Unit Price:</span> ${{ beer.unit_price }}</div>
-            <div class="beer-info"><span>Total Price:</span> ${{ beer.total_price }}</div>
-            <div class="beer-info"><span>Alcohol %:</span> {{ beer.percentage }}</div>
-            <div class="beer-info"><span>Standard Drinks:</span> {{ beer.standard_drinks }}</div>
-            <div class="beer-info"><span>Size:</span> {{ beer.size }} ml</div>
-            <div class="beer-info"><span>Package:</span> {{ beer.package }} ({{ beer.package_size }})</div>
-            <div class="beer-info">
-              <span>{{ beer.special ? 'Special Price' : 'Regular Price' }}</span>
-            </div>
+            <div class="beer-title">{{ beer.name || 'Unnamed Beer' }}</div>
+            <div class="beer-info"><span>Cost per Standard:</span> ${{ beer.cost_per_standard || 'N/A' }}</div>
+            <div class="beer-info"><span>Unit Price:</span> ${{ beer.unit_price || 'N/A' }}</div>
+            <div class="beer-info"><span>Total Price:</span> ${{ beer.total_price || 'N/A' }}</div>
+            <div class="beer-info"><span>Alcohol %:</span> {{ beer.percentage || 'N/A' }}</div>
+            <div class="beer-info"><span>Standard Drinks:</span> {{ beer.standard_drinks || 'N/A' }}</div>
+            <div class="beer-info"><span>Size:</span> {{ beer.size || 'N/A' }} ml</div>
+            <div class="beer-info"><span>Package:</span> {{ beer.package || 'N/A' }} ({{ beer.package_size || 'N/A' }})</div>
+            <div class="beer-info"><span>{{ beer.special ? 'Special Price' : 'Regular Price' }}</span></div>
           </div>
         </div>
       </div>
-      
-      <div v-if="beers.length === 0" class="no-results">
-        Loading data or no beers available.
+     
+      <!-- Load More Button -->
+      <div v-if="displayLimit < filteredBeers.length" class="load-more-container">
+         <button @click="loadMore" class="btn-load-more">Load More</button>
       </div>
       
-      <div v-if="displayLimit < beers.length" class="load-more-container">
-        <button @click="loadMore" class="btn-load-more">Load More</button>
+      <!-- Debug Information (hidden by default) -->
+      <div class="debug-tools" style="margin-top: 20px;">
+        <button @click="showDebugInfo" class="debug-button">Show Debug Info</button>
+        
+        <pre v-if="debugInfo.length > 0" style="display: none; font-size: 10px;">
+          Beers: {{ beers.length }}
+          Filtered Beers: {{ filteredBeers.length }}
+          Displayed Beers: {{ displayedBeers.length }}
+          Search Query: "{{ searchQuery }}"
+          Display Limit: {{ displayLimit }}
+        </pre>
       </div>
     </div>
   </div>
-  
+ 
   <!-- Vue.js -->
   <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
   <script src="main.js"></script>
