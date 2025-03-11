@@ -18,7 +18,6 @@
       <!-- Search Box -->
       <div class="search-container">
          <input type="text" v-model="searchQuery" placeholder="search away" class="input-search">
-         <button v-if="searchQuery" @click="clearSearch" class="btn-clear-search">Clear</button>
       </div>
       
       <!-- No Results Message -->
@@ -59,19 +58,6 @@
       <!-- Load More Button -->
       <div v-if="displayLimit < filteredBeers.length" class="load-more-container">
          <button @click="loadMore" class="btn-load-more">Load More</button>
-      </div>
-      
-      <!-- Debug Information (hidden by default) -->
-      <div class="debug-tools" style="margin-top: 20px;">
-        <button @click="showDebugInfo" class="debug-button">Show Debug Info</button>
-        
-        <pre v-if="debugInfo.length > 0" style="display: none; font-size: 10px;">
-          Beers: {{ beers.length }}
-          Filtered Beers: {{ filteredBeers.length }}
-          Displayed Beers: {{ displayedBeers.length }}
-          Search Query: "{{ searchQuery }}"
-          Display Limit: {{ displayLimit }}
-        </pre>
       </div>
     </div>
   </div>
