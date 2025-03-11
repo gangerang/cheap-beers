@@ -16,35 +16,41 @@
       <h1>Cheap Beers</h1>
     </header>
     <div class="container">
-      <!-- Search Box -->
-      <div class="search-container">
-         <input type="text" v-model="searchQuery" placeholder="find your beer..." class="input-search">
+      <!-- Row 1: Search Box -->
+      <div class="row">
+        <div class="fixed-width">
+          <input type="text" v-model="searchQuery" placeholder="find your beer..." class="input-search">
+        </div>
       </div>
       
-      <!-- First Row of Filter Buttons (Specials, Singles, Packs, Cases) -->
-      <div class="filter-buttons">
-         <button class="filter-button" :class="{'active': includeSpecials}" @click="toggleSpecials">Specials</button>
-         <button class="filter-button" :class="{'active': selectedPackages.includes('single')}" @click="togglePackage('single')">Singles</button>
-         <button class="filter-button" :class="{'active': selectedPackages.includes('pack')}" @click="togglePackage('pack')">Packs</button>
-         <button class="filter-button" :class="{'active': selectedPackages.includes('case')}" @click="togglePackage('case')">Cases</button>
+      <!-- Row 2: First Set of Filter Buttons -->
+      <div class="row">
+        <div class="fixed-width filter-row">
+          <button class="filter-button" :class="{'active': includeSpecials}" @click="toggleSpecials">Specials</button>
+          <button class="filter-button" :class="{'active': selectedPackages.includes('single')}" @click="togglePackage('single')">Singles</button>
+          <button class="filter-button" :class="{'active': selectedPackages.includes('pack')}" @click="togglePackage('pack')">Packs</button>
+          <button class="filter-button" :class="{'active': selectedPackages.includes('case')}" @click="togglePackage('case')">Cases</button>
+        </div>
       </div>
       
-      <!-- Second Row of Vessel Filter Buttons (Reset, Can, Bottle, Longneck) -->
-      <div class="vessel-buttons">
-         <button class="filter-button reset-button" @click="resetFilters">Reset</button>
-         <button class="filter-button" :class="{'active': selectedVessels.includes('can')}" @click="toggleVessel('can')">Can</button>
-         <button class="filter-button" :class="{'active': selectedVessels.includes('bottle')}" @click="toggleVessel('bottle')">Bottle</button>
-         <button class="filter-button" :class="{'active': selectedVessels.includes('longneck')}" @click="toggleVessel('longneck')">Longneck</button>
+      <!-- Row 3: Second Set of Vessel Buttons -->
+      <div class="row">
+        <div class="fixed-width filter-row">
+          <button class="filter-button reset-button" @click="resetFilters">Reset</button>
+          <button class="filter-button" :class="{'active': selectedVessels.includes('can')}" @click="toggleVessel('can')">Can</button>
+          <button class="filter-button" :class="{'active': selectedVessels.includes('bottle')}" @click="toggleVessel('bottle')">Bottle</button>
+          <button class="filter-button" :class="{'active': selectedVessels.includes('longneck')}" @click="toggleVessel('longneck')">Longneck</button>
+        </div>
       </div>
       
-      <!-- No Results or Loading Message -->
+      <!-- Messages -->
       <div v-if="displayedBeers.length === 0 && searchQuery && beers.length > 0" class="no-results">
         No beers match your search query.
       </div>
       <div v-if="beers.length === 0" class="no-results">
-         Loading data or no beers available.
+        Loading data or no beers available.
       </div>
-     
+      
       <!-- Beer Grid -->
       <div class="beer-grid" v-if="displayedBeers.length > 0">
         <div class="beer-card" v-for="(beer, index) in displayedBeers" :key="(beer.stockcode || '') + (beer.package || '') + index">
@@ -69,14 +75,14 @@
           </div>
         </div>
       </div>
-     
+      
       <!-- Load More Button -->
       <div v-if="displayLimit < filteredBeers.length" class="load-more-container">
-         <button @click="loadMore" class="btn-load-more">Load More</button>
+        <button @click="loadMore" class="btn-load-more">Load More</button>
       </div>
     </div>
   </div>
- 
+  
   <!-- Vue.js -->
   <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
   <script src="main.js"></script>

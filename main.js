@@ -7,12 +7,11 @@ new Vue({
     beers: [],
     searchQuery: "",
     displayLimit: LOAD_COUNT,
-    includeSpecials: true,  // Specials are included by default.
+    includeSpecials: true,            // Specials are included by default.
     selectedPackages: ["single", "pack", "case"],  // All package types selected by default.
-    selectedVessels: ["can", "bottle", "longneck"]  // All vessel types selected by default.
+    selectedVessels: ["can", "bottle", "longneck"]   // All vessel types selected by default.
   },
   computed: {
-    // Filter out invalid items, online_only beers, apply search, then filter by specials, package and vessel.
     filteredBeers() {
       let available = this.beers.filter(beer => {
         return beer && typeof beer === "object" &&
@@ -29,7 +28,6 @@ new Vue({
         available = available.filter(beer => beer.special === false);
       }
       
-      // Filter by package.
       if (this.selectedPackages.length === 0) {
         available = [];
       } else {
@@ -39,7 +37,6 @@ new Vue({
         });
       }
       
-      // Filter by vessel. Default vessel is "bottle" if not provided.
       if (this.selectedVessels.length === 0) {
         available = [];
       } else {
@@ -50,8 +47,8 @@ new Vue({
       }
       
       return available.slice().sort((a, b) => {
-        let aVal = (a.cost_per_standard !== undefined && a.cost_per_standard !== null) ? parseFloat(a.cost_per_standard) : 0;
-        let bVal = (b.cost_per_standard !== undefined && b.cost_per_standard !== null) ? parseFloat(b.cost_per_standard) : 0;
+        let aVal = (a.cost_per_standard != null) ? parseFloat(a.cost_per_standard) : 0;
+        let bVal = (b.cost_per_standard != null) ? parseFloat(b.cost_per_standard) : 0;
         if (isNaN(aVal)) aVal = 0;
         if (isNaN(bVal)) bVal = 0;
         return aVal - bVal;
@@ -134,7 +131,6 @@ new Vue({
       }
       return num.toFixed(2);
     },
-    // Returns packaging info based on beer type.
     packagingInfo(beer) {
       const size = beer.size;
       const vessel = beer.vessel ? beer.vessel.toLowerCase() : "bottle";
