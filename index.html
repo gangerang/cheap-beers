@@ -13,37 +13,36 @@
 <body>
   <div id="app">
     <header>
-      <h1>Cheap Beers</h1>
+      <!-- Double-clicking this heading will copy the shareable URL to the clipboard -->
+      <h1 @dblclick="copyUrl">Cheap Beers</h1>
     </header>
     <div class="container">
-      <!-- Row 1: Search Box -->
+      <!-- ... rest of your content remains unchanged ... -->
       <div class="row">
         <div class="fixed-width">
           <input type="text" v-model="searchQuery" placeholder="find your beer..." class="input-search">
         </div>
       </div>
       
-      <!-- Row 2: First Set of Filter Buttons -->
+      <!-- Filter buttons and beer grid (unchanged) -->
       <div class="row">
         <div class="fixed-width filter-row">
           <button class="filter-button" :class="{'active': includeSpecials}" @click="toggleSpecials">Specials</button>
-          <button class="filter-button" :class="{'active': selectedPackages.indexOf('single') !== -1}" @click="togglePackage('single')">Singles</button>
-          <button class="filter-button" :class="{'active': selectedPackages.indexOf('pack') !== -1}" @click="togglePackage('pack')">Packs</button>
-          <button class="filter-button" :class="{'active': selectedPackages.indexOf('case') !== -1}" @click="togglePackage('case')">Cases</button>
+          <button class="filter-button" :class="{'active': selectedPackages.includes('single')}" @click="togglePackage('single')">Singles</button>
+          <button class="filter-button" :class="{'active': selectedPackages.includes('pack')}" @click="togglePackage('pack')">Packs</button>
+          <button class="filter-button" :class="{'active': selectedPackages.includes('case')}" @click="togglePackage('case')">Cases</button>
         </div>
       </div>
       
-      <!-- Row 3: Second Set of Vessel Buttons -->
       <div class="row">
         <div class="fixed-width filter-row">
           <button class="filter-button reset-button" @click="resetFilters">Reset</button>
-          <button class="filter-button" :class="{'active': selectedVessels.indexOf('can') !== -1}" @click="toggleVessel('can')">Can</button>
-          <button class="filter-button" :class="{'active': selectedVessels.indexOf('bottle') !== -1}" @click="toggleVessel('bottle')">Bottle</button>
-          <button class="filter-button" :class="{'active': selectedVessels.indexOf('longneck') !== -1}" @click="toggleVessel('longneck')">Longneck</button>
+          <button class="filter-button" :class="{'active': selectedVessels.includes('can')}" @click="toggleVessel('can')">Can</button>
+          <button class="filter-button" :class="{'active': selectedVessels.includes('bottle')}" @click="toggleVessel('bottle')">Bottle</button>
+          <button class="filter-button" :class="{'active': selectedVessels.includes('longneck')}" @click="toggleVessel('longneck')">Longneck</button>
         </div>
       </div>
       
-      <!-- Messages -->
       <div v-if="displayedBeers.length === 0 && searchQuery && beers.length > 0" class="no-results">
         No beers match your search query.
       </div>
@@ -51,7 +50,6 @@
         Loading data or no beers available.
       </div>
       
-      <!-- Beer Grid -->
       <div class="beer-grid" v-if="displayedBeers.length > 0">
         <div class="beer-card" v-for="(beer, index) in displayedBeers" :key="(beer.stockcode || '') + (beer.package || '') + index">
           <a v-if="beer.stockcode" :href="supplierUrl(beer.stockcode)" target="_blank">
@@ -76,7 +74,6 @@
         </div>
       </div>
       
-      <!-- Load More Button -->
       <div v-if="displayLimit < filteredBeers.length" class="load-more-container">
         <button @click="loadMore" class="btn-load-more">Load More</button>
       </div>

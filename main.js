@@ -7,22 +7,21 @@ new Vue({
     beers: [],
     searchQuery: "",
     displayLimit: LOAD_COUNT,
-    includeSpecials: true,            // Specials are included by default.
-    selectedPackages: ["single", "pack", "case"],  // All package types selected by default.
-    selectedVessels: ["can", "bottle", "longneck"]   // All vessel types selected by default.
+    includeSpecials: true,            // Default: specials are included.
+    selectedPackages: ["single", "pack", "case"],  // Default packages.
+    selectedVessels: ["can", "bottle", "longneck"]   // Default vessels.
   },
   computed: {
     filteredBeers() {
-      // First filter out invalid beer entries.
+      // Filter out invalid beer entries.
       let available = this.beers.filter(beer => {
         return beer && typeof beer === "object" &&
                beer.name && typeof beer.name === "string" &&
                beer.online_only !== true;
       });
       
-      // Updated search filter:
-      // If a search query is provided, split it into words and check if every word
-      // appears in a searchable string containing the beer's name, vessel, package, size, and package_size.
+      // Search filter: split query into words and check that every word appears
+      // somewhere in the concatenated searchable fields.
       if (this.searchQuery) {
         const words = this.searchQuery.trim().toLowerCase().split(/\s+/);
         available = available.filter(beer => {
@@ -37,12 +36,12 @@ new Vue({
         });
       }
       
-      // Filter out specials if needed.
+      // Filter out specials if includeSpecials is false.
       if (!this.includeSpecials) {
         available = available.filter(beer => beer.special === false);
       }
       
-      // Filter by package types.
+      // Filter by package types (only if at least one is selected).
       if (this.selectedPackages.length === 0) {
         available = [];
       } else {
@@ -52,7 +51,7 @@ new Vue({
         });
       }
       
-      // Filter by vessel types.
+      // Filter by vessel types (only if at least one is selected).
       if (this.selectedVessels.length === 0) {
         available = [];
       } else {
@@ -62,7 +61,7 @@ new Vue({
         });
       }
       
-      // Sort the available beers by cost per standard.
+      // Sort beers by cost per standard.
       return available.slice().sort((a, b) => {
         let aVal = (a.cost_per_standard != null) ? parseFloat(a.cost_per_standard) : 0;
         let bVal = (b.cost_per_standard != null) ? parseFloat(b.cost_per_standard) : 0;
@@ -76,6 +75,7 @@ new Vue({
     }
   },
   methods: {
+    // Existing methods for image URL, error handling, supplier URL, etc.
     getImageUrl(stockcode) {
       if (!stockcode) return "";
       let code = stockcode.toString();
@@ -157,9 +157,67 @@ new Vue({
       } else {
         return `${beer.package_size} x ${size}mL ${vessel}`;
       }
+    },
+    // NEW: Build a shareable URL that includes search and filter params.
+    buildShareUrl() {
+      const params = new URLSearchParams();
+      
+      // Always include the search query if present.
+      if (this.searchQuery) {
+        params.set("q", this.searchQuery);
+      }
+      
+      // Only include includeSpecials if it's not the default (true).
+      if (this.includeSpecials !== true) {
+        params.set("specials", this.includeSpecials);
+      }
+      
+      // Only include packages if they differ from the default.
+      const defaultPackages = ["single", "pack", "case"];
+      if (this.selectedPackages.slice().sort().join(",") !== defaultPackages.slice().sort().join(",")) {
+        params.set("packages", this.selectedPackages.join(","));
+      }
+      
+      // Only include vessels if they differ from the default.
+      const defaultVessels = ["can", "bottle", "longneck"];
+      if (this.selectedVessels.slice().sort().join(",") !== defaultVessels.slice().sort().join(",")) {
+        params.set("vessels", this.selectedVessels.join(","));
+      }
+      
+      // Construct the URL using the current origin and path.
+      const baseUrl = window.location.origin + window.location.pathname;
+      const shareUrl = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
+      return shareUrl;
+    },
+    // NEW: Copy the shareable URL to the clipboard.
+    copyUrl() {
+      const shareUrl = this.buildShareUrl();
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        alert("URL copied to clipboard:\n" + shareUrl);
+      }).catch(err => {
+        console.error("Error copying URL: ", err);
+      });
+    },
+    // NEW: Apply URL parameters (if any) to pre-populate the search state.
+    applyUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has("q")) {
+        this.searchQuery = params.get("q");
+      }
+      if (params.has("specials")) {
+        this.includeSpecials = params.get("specials") === "true";
+      }
+      if (params.has("packages")) {
+        this.selectedPackages = params.get("packages").split(",");
+      }
+      if (params.has("vessels")) {
+        this.selectedVessels = params.get("vessels").split(",");
+      }
     }
   },
   created() {
+    // On load, apply any URL parameters then fetch the beer data.
+    this.applyUrlParams();
     this.fetchData();
   }
 });
