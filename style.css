@@ -169,3 +169,18 @@ header h1 {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
 }
+
+.beer-details-and-image {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.beer-details {
+  flex: 1;
+}
+
+.beer-image-container {
+  margin-left: 1rem;
+  width: 150px; /* Adjust the width as needed */
+}
