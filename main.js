@@ -108,21 +108,45 @@ new Vue({
       this.includeSpecials = !this.includeSpecials;
     },
     togglePackage(pkg) {
-      const index = this.selectedPackages.indexOf(pkg);
-      if (index === -1) {
-        this.selectedPackages.push(pkg);
+      const allPackages = ["single", "pack", "case"];
+      if (this.selectedPackages.length === allPackages.length) {
+        // All selected: clicking one selects only that one.
+        this.selectedPackages = [pkg];
+      } else if (this.selectedPackages.length === 1 && this.selectedPackages[0] === pkg) {
+        // If only one is active and it's clicked again, reset to all.
+        this.selectedPackages = [...allPackages];
       } else {
-        this.selectedPackages.splice(index, 1);
+        // Multi-select mode:
+        if (this.selectedPackages.includes(pkg)) {
+          // Remove the filter.
+          this.selectedPackages = this.selectedPackages.filter(p => p !== pkg);
+          // If removal would leave none selected, reset to all.
+          if (this.selectedPackages.length === 0) {
+            this.selectedPackages = [...allPackages];
+          }
+        } else {
+          // Add the newly clicked filter.
+          this.selectedPackages.push(pkg);
+        }
       }
-    },
+    },    
     toggleVessel(vessel) {
-      const index = this.selectedVessels.indexOf(vessel);
-      if (index === -1) {
-        this.selectedVessels.push(vessel);
+      const allVessels = ["can", "bottle", "longneck"];
+      if (this.selectedVessels.length === allVessels.length) {
+        this.selectedVessels = [vessel];
+      } else if (this.selectedVessels.length === 1 && this.selectedVessels[0] === vessel) {
+        this.selectedVessels = [...allVessels];
       } else {
-        this.selectedVessels.splice(index, 1);
+        if (this.selectedVessels.includes(vessel)) {
+          this.selectedVessels = this.selectedVessels.filter(v => v !== vessel);
+          if (this.selectedVessels.length === 0) {
+            this.selectedVessels = [...allVessels];
+          }
+        } else {
+          this.selectedVessels.push(vessel);
+        }
       }
-    },
+    },    
     resetFilters() {
       this.searchQuery = "";
       this.includeSpecials = true;
