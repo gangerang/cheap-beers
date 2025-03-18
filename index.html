@@ -53,16 +53,18 @@
       <div class="beer-grid" v-if="displayedBeers.length > 0">
         <div class="beer-card" v-for="(beer, index) in displayedBeers" :key="(beer.stockcode || '') + (beer.package || '') + index">
           <div class="beer-content">
+            <!-- Title now includes cost per standard -->
             <div class="beer-title">{{ beer.name_clean }} - ${{ formatPrice(beer.cost_per_standard) }}</div>
             <div class="beer-details-and-image">
               <div class="beer-details">
                 <div class="beer-info"><span>Type:</span> {{ packagingInfo(beer) }}</div>
+                <div class="beer-info"><span>Standard drinks:</span> {{ beer.standard_drinks || 'N/A' }}</div>
+                <div class="beer-info"><span>Alcohol %:</span> {{ beer.percentage || 'N/A' }}</div>
                 <div class="beer-info"><span>Unit price:</span> ${{ formatPrice(beer.unit_price) }}</div>
                 <div class="beer-info">
                   <span>Total price:</span> ${{ formatPrice(beer.total_price) }}{{ beer.special ? " on special" : "" }}
                 </div>
-                <div class="beer-info"><span>Alcohol %:</span> {{ beer.percentage || 'N/A' }}</div>
-                <div class="beer-info"><span>Standard drinks:</span> {{ beer.standard_drinks || 'N/A' }}</div>
+                <div class="beer-info"><span>Beer tax:</span> {{ beer.alcohol_tax_percent }}%</div>
               </div>
               <div class="beer-image-container">
                 <a v-if="beer.stockcode" :href="supplierUrl(beer.stockcode)" target="_blank">
