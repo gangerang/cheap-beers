@@ -65,13 +65,16 @@
                   <span>Total price:</span> ${{ formatPrice(beer.total_price) }}{{ beer.special ? " on special" : "" }}
                 </div>
                 <div class="beer-info"><span>Beer tax:</span> {{ beer.alcohol_tax_percent }}%</div>
+                <div class="beer-info"><span>Rating:</span> {{ beer.rating }}</div>
+                <!-- <div class="beer-info"><span>IBU:</span> {{ beer.ibu }}</div> -->
+                <!-- <div class="beer-info"><span>Style:</span> {{ beer.beer_style }}</div> -->
               </div>
               <div class="beer-image-container">
                 <a v-if="beer.stockcode" :href="supplierUrl(beer.stockcode)" target="_blank">
                   <img class="beer-image"
-                       :src="getImageUrl(beer.stockcode)"
-                       :alt="beer.name_clean || 'Beer'"
-                       @error="handleImageError($event, beer.stockcode)">
+                  :src="beer.image_url"
+                  :alt="beer.name_clean || 'Beer'"
+                  @error="handleImageError">             
                 </a>
                 <div v-else class="beer-image placeholder-image">No Image</div>
               </div>

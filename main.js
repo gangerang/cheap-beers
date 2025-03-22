@@ -1,5 +1,5 @@
 const LOAD_COUNT = 48;
-const dataUrl = "https://raw.githubusercontent.com/gangerang/alculator-data/master/datasets_cleaned/beer_cleaned.json";
+const dataUrl = "https://raw.githubusercontent.com/gangerang/alculator-data/master/datasets_cleaned/beer.json";
 
 new Vue({
   el: '#app',
@@ -7,21 +7,66 @@ new Vue({
     beers: [],
     searchQuery: "",
     displayLimit: LOAD_COUNT,
-    includeSpecials: true,            // Default: specials are included.
-    selectedPackages: ["single", "pack", "case"],  // Default packages.
-    selectedVessels: ["can", "bottle", "longneck"]   // Default vessels.
+    includeSpecials: true,            // Specials filter: when true, use special pricing if available.
+    selectedPackages: ["single", "pack", "case"],  // Filter by base package type.
+    selectedVessels: ["can", "bottle", "longneck"]
   },
   computed: {
-    filteredBeers() {
-      // Filter out invalid beer entries.
-      let available = this.beers.filter(beer => {
-        return beer && typeof beer === "object" &&
-               beer.name && typeof beer.name === "string" &&
-               beer.online_only !== true;
+    // Flatten each beer record into separate pricing “cards.”
+    flattenedBeers() {
+      let result = [];
+      this.beers.forEach(beer => {
+        if (!beer.properties || !beer.pricing) return;
+        // For filtering, get the vessel from properties (default to "bottle" if missing).
+        let vessel = beer.properties.vessel ? beer.properties.vessel.toLowerCase() : "bottle";
+        // Loop through each base package type.
+        ["single", "pack", "case"].forEach(pkgType => {
+          // Only process if this package is selected in the filters.
+          if (!this.selectedPackages.includes(pkgType)) return;
+          let pricingData = null;
+          let isSpecial = false;
+          // Use special pricing if available and the filter is active.
+          if (this.includeSpecials && beer.pricing[`${pkgType}_special`]) {
+            pricingData = beer.pricing[`${pkgType}_special`];
+            isSpecial = true;
+          } else if (beer.pricing[pkgType]) {
+            pricingData = beer.pricing[pkgType];
+          }
+          // If pricing exists, add the flattened card.
+          if (pricingData) {
+            result.push({
+              stockcode: beer.stockcode,
+              name: beer.properties.name,
+              name_clean: beer.properties.name_clean,
+              brand: beer.properties.brand,
+              size: beer.properties.size_clean,                // Use the clean size.
+              percentage: beer.properties.percentage_raw,        // Use raw percentage.
+              standard_drinks: beer.properties.standard_drinks_clean, // Use clean standard drinks.
+              vessel: beer.properties.vessel,
+              // Build the full image URL using the provided image name.
+              image_url: "https://media.danmurphys.com.au/dmo/product/" + beer.properties.image_url,
+              // Map numeric rating to word.
+              rating: this.mapRating(beer.properties.rating),
+              // Removed IBU and beer_style.
+              package: pkgType,
+              package_special: isSpecial,                        // Flag indicating special pricing.
+              package_size: pricingData.units,                   // Units per package.
+              total_price: pricingData.total_price,
+              unit_price: pricingData.unit_price,
+              cost_per_standard: pricingData.cost_per_standard,
+              alcohol_tax_cost: pricingData.alcohol_tax_cost,
+              alcohol_tax_percent: pricingData.alcohol_tax_percent
+            });
+          }
+        });
       });
+      return result;
+    },
+    // Apply search, vessel filtering and sort on the flattened beer cards.
+    filteredBeers() {
+      let available = this.flattenedBeers.filter(beer => beer && beer.name);
       
-      // Search filter: split query into words and check that every word appears
-      // somewhere in the concatenated searchable fields.
+      // Search filter: check that every search word appears in a few key fields.
       if (this.searchQuery) {
         const words = this.searchQuery.trim().toLowerCase().split(/\s+/);
         available = available.filter(beer => {
@@ -36,66 +81,44 @@ new Vue({
         });
       }
       
-      // Filter out specials if includeSpecials is false.
-      if (!this.includeSpecials) {
-        available = available.filter(beer => beer.special === false);
-      }
+      // Filter out cards where cost per standard is null or 0.
+      available = available.filter(beer => parseFloat(beer.cost_per_standard) > 0);
       
-      // Filter by package types (only if at least one is selected).
-      if (this.selectedPackages.length === 0) {
-        available = [];
-      } else {
-        available = available.filter(beer => {
-          let pkg = (beer.package || "").toLowerCase();
-          return this.selectedPackages.includes(pkg);
-        });
-      }
-      
-      // Filter by vessel types (only if at least one is selected).
-      if (this.selectedVessels.length === 0) {
-        available = [];
-      } else {
+      // Filter by vessel.
+      if (this.selectedVessels.length > 0) {
         available = available.filter(beer => {
           let vessel = (beer.vessel || "bottle").toLowerCase();
           return this.selectedVessels.includes(vessel);
         });
       }
       
-      // Sort beers by cost per standard.
-      return available.slice().sort((a, b) => {
-        let aVal = (a.cost_per_standard != null) ? parseFloat(a.cost_per_standard) : 0;
-        let bVal = (b.cost_per_standard != null) ? parseFloat(b.cost_per_standard) : 0;
-        if (isNaN(aVal)) aVal = 0;
-        if (isNaN(bVal)) bVal = 0;
+      // Sort by cost per standard drink.
+      available.sort((a, b) => {
+        let aVal = parseFloat(a.cost_per_standard) || 0;
+        let bVal = parseFloat(b.cost_per_standard) || 0;
         return aVal - bVal;
       });
+      return available;
     },
     displayedBeers() {
       return this.filteredBeers.slice(0, this.displayLimit);
     }
   },
   methods: {
-    // Existing methods for image URL, error handling, supplier URL, etc.
-    getImageUrl(stockcode) {
-      if (!stockcode) return "";
-      let code = stockcode.toString();
-      if (code.startsWith("ER_")) code = code.slice(3);
-      return `https://media.danmurphys.com.au/dmo/product/${code}-1.png`;
+    // Helper function to map rating numbers to descriptive words.
+    mapRating(rating) {
+      if (rating === null || rating === undefined) return "?";
+      const num = parseFloat(rating);
+      if (isNaN(num)) return "🤨?";
+      if (num < 3.5) return "Undrinkable";
+      if (num < 4) return "Just ok";
+      if (num < 4.5) return "Good enough";
+      if (num <= 4.8) return "Great!";
+      return "Legendary";
     },
-    getAltImageUrl(stockcode) {
-      if (!stockcode) return "";
-      let code = stockcode.toString();
-      if (code.startsWith("ER_")) code = code.slice(3);
-      code = code.replace(/_/g, '-');
-      return `https://media.danmurphys.com.au/dmo/product/${code}-1.png`;
-    },
-    handleImageError(event, stockcode) {
-      const altSrc = this.getAltImageUrl(stockcode);
-      if (event.target.src !== altSrc) {
-        event.target.src = altSrc;
-      } else {
-        event.target.src = "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2248%22>🍺</text></svg>";
-      }
+    // Use the provided image URL directly. In case of an error, fall back to a beer icon.
+    handleImageError(event) {
+      event.target.src = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='48'>🍺</text></svg>";
     },
     supplierUrl(stockcode) {
       if (!stockcode) return "#";
@@ -110,26 +133,20 @@ new Vue({
     togglePackage(pkg) {
       const allPackages = ["single", "pack", "case"];
       if (this.selectedPackages.length === allPackages.length) {
-        // All selected: clicking one selects only that one.
         this.selectedPackages = [pkg];
       } else if (this.selectedPackages.length === 1 && this.selectedPackages[0] === pkg) {
-        // If only one is active and it's clicked again, reset to all.
         this.selectedPackages = [...allPackages];
       } else {
-        // Multi-select mode:
         if (this.selectedPackages.includes(pkg)) {
-          // Remove the filter.
           this.selectedPackages = this.selectedPackages.filter(p => p !== pkg);
-          // If removal would leave none selected, reset to all.
           if (this.selectedPackages.length === 0) {
             this.selectedPackages = [...allPackages];
           }
         } else {
-          // Add the newly clicked filter.
           this.selectedPackages.push(pkg);
         }
       }
-    },    
+    },
     toggleVessel(vessel) {
       const allVessels = ["can", "bottle", "longneck"];
       if (this.selectedVessels.length === allVessels.length) {
@@ -146,7 +163,7 @@ new Vue({
           this.selectedVessels.push(vessel);
         }
       }
-    },    
+    },
     resetFilters() {
       this.searchQuery = "";
       this.includeSpecials = true;
@@ -157,7 +174,10 @@ new Vue({
       fetch(dataUrl)
         .then(response => response.json())
         .then(data => {
-          this.beers = Array.isArray(data) ? data.filter(item => item && item.name) : [];
+          // Assuming the data is in the new nested format.
+          this.beers = Array.isArray(data)
+            ? data.filter(item => item && item.properties && item.properties.name)
+            : [];
         })
         .catch(error => console.error("Error loading JSON data:", error));
     },
@@ -172,48 +192,40 @@ new Vue({
       }
       return num.toFixed(2);
     },
+    // Updated packagingInfo to work with new fields and check for single packages with unit > 1.
     packagingInfo(beer) {
       const size = beer.size;
       const vessel = beer.vessel ? beer.vessel.toLowerCase() : "bottle";
-      const pkg = (beer.package || "").toLowerCase();
-      if (pkg === "single") {
-        return `${size}mL ${vessel}`;
+      if (beer.package === "single") {
+        if (beer.package_size > 1) {
+          return `${beer.package_size} x ${size}mL ${vessel}`;
+        } else {
+          return `${size}mL ${vessel}`;
+        }
       } else {
         return `${beer.package_size} x ${size}mL ${vessel}`;
       }
     },
-    // NEW: Build a shareable URL that includes search and filter params.
     buildShareUrl() {
       const params = new URLSearchParams();
-      
-      // Always include the search query if present.
       if (this.searchQuery) {
         params.set("q", this.searchQuery);
       }
-      
-      // Only include includeSpecials if it's not the default (true).
       if (this.includeSpecials !== true) {
         params.set("specials", this.includeSpecials);
       }
-      
-      // Only include packages if they differ from the default.
       const defaultPackages = ["single", "pack", "case"];
       if (this.selectedPackages.slice().sort().join(",") !== defaultPackages.slice().sort().join(",")) {
         params.set("packages", this.selectedPackages.join(","));
       }
-      
-      // Only include vessels if they differ from the default.
       const defaultVessels = ["can", "bottle", "longneck"];
       if (this.selectedVessels.slice().sort().join(",") !== defaultVessels.slice().sort().join(",")) {
         params.set("vessels", this.selectedVessels.join(","));
       }
-      
-      // Construct the URL using the current origin and path.
       const baseUrl = window.location.origin + window.location.pathname;
       const shareUrl = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
       return shareUrl;
     },
-    // NEW: Copy the shareable URL to the clipboard.
     copyUrl() {
       const shareUrl = this.buildShareUrl();
       navigator.clipboard.writeText(shareUrl).then(() => {
@@ -222,7 +234,6 @@ new Vue({
         console.error("Error copying URL: ", err);
       });
     },
-    // NEW: Apply URL parameters (if any) to pre-populate the search state.
     applyUrlParams() {
       const params = new URLSearchParams(window.location.search);
       if (params.has("q")) {
@@ -240,7 +251,6 @@ new Vue({
     }
   },
   created() {
-    // On load, apply any URL parameters then fetch the beer data.
     this.applyUrlParams();
     this.fetchData();
   }
