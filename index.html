@@ -62,7 +62,7 @@
                 <div class="beer-info"><span>Alcohol %:</span> {{ beer.percentage || 'N/A' }}</div>
                 <div class="beer-info"><span>Unit price:</span> ${{ formatPrice(beer.unit_price) }}</div>
                 <div class="beer-info">
-                  <span>Total price:</span> ${{ formatPrice(beer.total_price) }}{{ beer.special ? " on special" : "" }}
+                  <span>Total price:</span> ${{ formatPrice(beer.total_price) }}{{ beer.package_special ? " on special" : "" }}
                 </div>
                 <div class="beer-info"><span>Beer tax:</span> {{ beer.alcohol_tax_percent }}%</div>
                 <div class="beer-info"><span>Rating:</span> {{ beer.rating }}</div>
