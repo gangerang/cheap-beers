@@ -324,6 +324,33 @@ header h1 {
   100% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
 }
 
+/* Search row layout */
+.search-row {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 0.4rem;
+}
+
+.input-search {
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  width: 100%;
+  text-align: left;
+}
+
+.toggle-filters {
+  width: 100%;
+  white-space: nowrap;
+}
+
+/* Filters section animation */
+.filters-section {
+  transition: all 0.3s ease-in-out;
+  margin-top: 1rem;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 600px) {
   .fixed-width {
@@ -350,5 +377,9 @@ header h1 {
   
   header h1 {
     font-size: 1.5rem;  /* Smaller title on mobile */
+  }
+  
+  .search-row {
+    grid-template-columns: 2fr 1fr;
   }
 }

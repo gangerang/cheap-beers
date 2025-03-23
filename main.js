@@ -21,7 +21,8 @@ new Vue({
     selectedStrengths: [...DEFAULTS.STRENGTHS],
     selectedRatings: [...DEFAULTS.RATINGS],
     showInfo: false,
-    showToast: false
+    showToast: false,
+    showFilters: false  // Add this line
   },
   computed: {
     // Flatten each beer record into separate pricing “cards.”
@@ -334,6 +335,9 @@ new Vue({
     },
     toggleInfo() {
       this.showInfo = !this.showInfo;
+    },
+    toggleFilters() {
+      this.showFilters = !this.showFilters;
     },
   },
   created() {
