@@ -48,28 +48,22 @@
       <!-- strength -->
       <div class="row">
         <div class="fixed-width filter-row">
-          <button class="filter-button" 
-                  :class="{'active': selectedStrengths.includes('Light')}" 
-                  @click="toggleStrength('Light')">
-            Light
-          </button>
-          <button class="filter-button" 
-                  :class="{'active': selectedStrengths.includes('Mid')}" 
-                  @click="toggleStrength('Mid')">
-            Mid
-          </button>
-          <button class="filter-button" 
-                  :class="{'active': selectedStrengths.includes('Full')}" 
-                  @click="toggleStrength('Full')">
-            Full
-          </button>
-          <button class="filter-button" 
-                  :class="{'active': selectedStrengths.includes('Extra full')}" 
-                  @click="toggleStrength('Extra full')">
-            Extra full
-          </button>
-        </div>
+          <button class="filter-button" :class="{'active': selectedStrengths.includes('Light')}" @click="toggleStrength('Light')">Light</button>
+          <button class="filter-button" :class="{'active': selectedStrengths.includes('Mid')}" @click="toggleStrength('Mid')">Mid</button>
+          <button class="filter-button" :class="{'active': selectedStrengths.includes('Full')}" @click="toggleStrength('Full')">Full</button>
+          <button class="filter-button" :class="{'active': selectedStrengths.includes('Extra full')}" @click="toggleStrength('Extra full')">Extra full</button>
+        </div>      
       </div>
+
+      <!-- rating -->
+      <div class="row">
+        <div class="fixed-width filter-row">
+          <button class="filter-button" :class="{'active': selectedRatings.includes('Undrinkable')}" @click="toggleRating('Undrinkable')">Undrinkable</button>
+          <button class="filter-button" :class="{'active': selectedRatings.includes('Ok / Good')}" @click="toggleRating('Ok / Good')">Ok / Good</button>
+          <button class="filter-button" :class="{'active': selectedRatings.includes('Great!')}" @click="toggleRating('Great!')">Great!</button>
+          <button class="filter-button" :class="{'active': selectedRatings.includes('Legendary')}" @click="toggleRating('Legendary')">Legendary</button>
+        </div>
+      </div>      
       
       
       <div v-if="displayedBeers.length === 0 && searchQuery && beers.length > 0" class="no-results">
@@ -95,7 +89,7 @@
                   <span>Total price:</span> ${{ formatPrice(beer.total_price) }}{{ beer.package_special ? " on special" : "" }}
                 </div>
                 <div class="beer-info"><span>Beer tax:</span> {{ beer.alcohol_tax_percent }}%</div>
-                <div class="beer-info"><span>Rating:</span> {{ beer.rating }}</div>
+                <div class="beer-info"><span>Rating:</span> {{ beer.ratingText }}</div>
                 <!-- <div class="beer-info"><span>IBU:</span> {{ beer.ibu }}</div> -->
                 <!-- <div class="beer-info"><span>Style:</span> {{ beer.beer_style }}</div> -->
               </div>

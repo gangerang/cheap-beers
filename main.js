@@ -10,7 +10,8 @@ new Vue({
     includeSpecials: true,            // Specials filter: when true, use special pricing if available.
     selectedPackages: ["single", "pack", "case"],  // Filter by base package type.
     selectedVessels: ["can", "bottle", "longneck"],
-    selectedStrengths: ["Light", "Mid", "Full", "Extra full"]
+    selectedStrengths: ["Light", "Mid", "Full", "Extra full"],
+    selectedRatings: ["Undrinkable", "Ok / Good", "Great!", "Legendary"],
   },
   computed: {
     // Flatten each beer record into separate pricing “cards.”
@@ -35,6 +36,8 @@ new Vue({
           }
           const strengthCategory = this.computeStrengthCategory(beer.properties.percentage_raw);
           const strengthIcon = this.computeStrengthEmoji(strengthCategory);
+          const ratingText = this.mapRatingText(beer.properties.rating);
+          const ratingCategory = this.mapRatingCategory(ratingText);
           // If pricing exists, add the flattened card.
           if (pricingData) {
             result.push({
@@ -51,7 +54,8 @@ new Vue({
               // Build the full image URL using the provided image name.
               image_url: "https://media.danmurphys.com.au/dmo/product/" + beer.properties.image_url,
               // Map numeric rating to word.
-              rating: this.mapRating(beer.properties.rating),
+              ratingText,
+              ratingCategory,
               // Removed IBU and beer_style.
               package: pkgType,
               package_special: isSpecial,                        // Flag indicating special pricing.
@@ -71,9 +75,24 @@ new Vue({
     filteredBeers() {
       let available = this.flattenedBeers.filter(beer => beer && beer.name);
 
+      // Filter by vessel.
+      if (this.selectedVessels.length > 0) {
+        available = available.filter(beer => {
+          let vessel = (beer.vessel || "bottle").toLowerCase();
+          return this.selectedVessels.includes(vessel);
+        });
+      }
+
       // Filter by strength category.
       if (this.selectedStrengths.length > 0) {
         available = available.filter(beer => this.selectedStrengths.includes(beer.strengthCategory));
+      }
+
+      // Filter by ratingCategory
+      if (this.selectedRatings.length > 0) {
+        available = available.filter(beer => {
+          return this.selectedRatings.includes(beer.ratingCategory);
+        });
       }
       
       // Search filter: check that every search word appears in a few key fields.
@@ -94,14 +113,6 @@ new Vue({
       // Filter out cards where cost per standard is null or 0.
       available = available.filter(beer => parseFloat(beer.cost_per_standard) > 0);
       
-      // Filter by vessel.
-      if (this.selectedVessels.length > 0) {
-        available = available.filter(beer => {
-          let vessel = (beer.vessel || "bottle").toLowerCase();
-          return this.selectedVessels.includes(vessel);
-        });
-      }
-      
       // Sort by cost per standard drink.
       available.sort((a, b) => {
         let aVal = parseFloat(a.cost_per_standard) || 0;
@@ -116,8 +127,9 @@ new Vue({
   },
   methods: {
     // Helper function to map rating numbers to descriptive words.
-    mapRating(rating) {
-      if (rating === null || rating === undefined) return "?";
+    // 5 categories for the card text:
+    mapRatingText(rating) {
+      if (rating == null) return "?";
       const num = parseFloat(rating);
       if (isNaN(num)) return "🤨?";
       if (num < 3.5) return "Undrinkable";
@@ -125,6 +137,13 @@ new Vue({
       if (num < 4.5) return "Good enough";
       if (num <= 4.8) return "Great!";
       return "Legendary";
+    },
+    // 4 categories for filtering (combine Ok and Good)
+    mapRatingCategory(ratingText) {
+      // Combine "Just ok" and "Good enough" into "Ok / Good"
+      if (ratingText === "Just ok" || ratingText === "Good enough") return "Ok / Good";
+      // Otherwise, it’s already Undrinkable, Great!, or Legendary
+      return ratingText;
     },
     // Use the provided image URL directly. In case of an error, fall back to a beer icon.
     handleImageError(event) {
@@ -171,6 +190,28 @@ new Vue({
           }
         } else {
           this.selectedVessels.push(vessel);
+        }
+      }
+    },
+    toggleRating(ratingCat) {
+      const allRatings = ["Undrinkable", "Ok / Good", "Great!", "Legendary"];
+      // If all are selected, clicking one selects only that one
+      if (this.selectedRatings.length === allRatings.length) {
+        this.selectedRatings = [ratingCat];
+      }
+      // If only one is active and it's clicked again, reset to all
+      else if (this.selectedRatings.length === 1 && this.selectedRatings[0] === ratingCat) {
+        this.selectedRatings = [...allRatings];
+      }
+      // Otherwise, toggle normally
+      else {
+        if (this.selectedRatings.includes(ratingCat)) {
+          this.selectedRatings = this.selectedRatings.filter(r => r !== ratingCat);
+          if (this.selectedRatings.length === 0) {
+            this.selectedRatings = [...allRatings];
+          }
+        } else {
+          this.selectedRatings.push(ratingCat);
         }
       }
     },
