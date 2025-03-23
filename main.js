@@ -168,51 +168,23 @@ new Vue({
     toggleSpecials() {
       this.includeSpecials = !this.includeSpecials;
     },
-    togglePackage(pkg) {
-      if (this.selectedPackages.length === DEFAULTS.PACKAGES.length) {
-        this.selectedPackages = [pkg];
-      } else if (this.selectedPackages.length === 1 && this.selectedPackages[0] === pkg) {
-        this.selectedPackages = [...DEFAULTS.PACKAGES];
+
+    // Generic toggle function that handles all filter types
+    // behavour is all selected by default
+    // when clicking 1, select only that
+    // then clicking others adds them in
+    // clicking a single 1 again will default back to all selected
+    toggleFilter(item, selectedArray, defaultArray) {
+      if (selectedArray.length === defaultArray.length) {
+        return [item];
+      } else if (selectedArray.length === 1 && selectedArray[0] === item) {
+        return [...defaultArray];
       } else {
-        if (this.selectedPackages.includes(pkg)) {
-          this.selectedPackages = this.selectedPackages.filter(p => p !== pkg);
-          if (this.selectedPackages.length === 0) {
-            this.selectedPackages = [...DEFAULTS.PACKAGES];
-          }
+        if (selectedArray.includes(item)) {
+          const filtered = selectedArray.filter(i => i !== item);
+          return filtered.length === 0 ? [...defaultArray] : filtered;
         } else {
-          this.selectedPackages.push(pkg);
-        }
-      }
-    },
-    toggleVessel(vessel) {
-      if (this.selectedVessels.length === DEFAULTS.VESSELS.length) {
-        this.selectedVessels = [vessel];
-      } else if (this.selectedVessels.length === 1 && this.selectedVessels[0] === vessel) {
-        this.selectedVessels = [...DEFAULTS.VESSELS];
-      } else {
-        if (this.selectedVessels.includes(vessel)) {
-          this.selectedVessels = this.selectedVessels.filter(v => v !== vessel);
-          if (this.selectedVessels.length === 0) {
-            this.selectedVessels = [...DEFAULTS.VESSELS];
-          }
-        } else {
-          this.selectedVessels.push(vessel);
-        }
-      }
-    },
-    toggleRating(ratingCat) {
-      if (this.selectedRatings.length === DEFAULTS.RATINGS.length) {
-        this.selectedRatings = [ratingCat];
-      } else if (this.selectedRatings.length === 1 && this.selectedRatings[0] === ratingCat) {
-        this.selectedRatings = [...DEFAULTS.RATINGS];
-      } else {
-        if (this.selectedRatings.includes(ratingCat)) {
-          this.selectedRatings = this.selectedRatings.filter(r => r !== ratingCat);
-          if (this.selectedRatings.length === 0) {
-            this.selectedRatings = [...DEFAULTS.RATINGS];
-          }
-        } else {
-          this.selectedRatings.push(ratingCat);
+          return [...selectedArray, item];
         }
       }
     },
@@ -232,22 +204,19 @@ new Vue({
         default: return "";
       }
     },
-    toggleStrength(strength) {
-      if (this.selectedStrengths.length === DEFAULTS.STRENGTHS.length) {
-        this.selectedStrengths = [strength];
-      } else if (this.selectedStrengths.length === 1 && this.selectedStrengths[0] === strength) {
-        this.selectedStrengths = [...DEFAULTS.STRENGTHS];
-      } else {
-        if (this.selectedStrengths.includes(strength)) {
-          this.selectedStrengths = this.selectedStrengths.filter(s => s !== strength);
-          if (this.selectedStrengths.length === 0) {
-            this.selectedStrengths = [...DEFAULTS.STRENGTHS];
-          }
-        } else {
-          this.selectedStrengths.push(strength);
-        }
-      }
+    // toggle functions for each filter type
+    togglePackage(pkg) {
+      this.selectedPackages = this.toggleFilter(pkg, this.selectedPackages, DEFAULTS.PACKAGES);
     },
+    toggleVessel(vessel) {
+      this.selectedVessels = this.toggleFilter(vessel, this.selectedVessels, DEFAULTS.VESSELS);
+    },
+    toggleRating(rating) {
+      this.selectedRatings = this.toggleFilter(rating, this.selectedRatings, DEFAULTS.RATINGS);
+    },
+    toggleStrength(strength) {
+      this.selectedStrengths = this.toggleFilter(strength, this.selectedStrengths, DEFAULTS.STRENGTHS);
+    },  
     resetFilters() {
       this.searchQuery = "";
       this.includeSpecials = true;
