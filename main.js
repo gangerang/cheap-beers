@@ -1,17 +1,25 @@
 const LOAD_COUNT = 48;
 const dataUrl = "https://raw.githubusercontent.com/gangerang/cheap-beers-data/master/datasets_cleaned/beer.json";
 
+// Define all defaults in one place
+const DEFAULTS = {
+  PACKAGES: ["single", "pack", "case"],
+  VESSELS: ["can", "bottle", "longneck"],
+  STRENGTHS: ["Light", "Mid", "Full", "Strong"],
+  RATINGS: ["Crap", "Ok", "Great", "Legendary"]
+};
+
 new Vue({
   el: '#app',
   data: {
     beers: [],
     searchQuery: "",
     displayLimit: LOAD_COUNT,
-    includeSpecials: true,            // Specials filter: when true, use special pricing if available.
-    selectedPackages: ["single", "pack", "case"],  // Filter by base package type.
-    selectedVessels: ["can", "bottle", "longneck"],
-    selectedStrengths: ["Light", "Mid", "Full", "Strong"],
-    selectedRatings: ["Crap", "Ok", "Great", "Legendary"],
+    includeSpecials: true,
+    selectedPackages: [...DEFAULTS.PACKAGES],
+    selectedVessels: [...DEFAULTS.VESSELS],
+    selectedStrengths: [...DEFAULTS.STRENGTHS],
+    selectedRatings: [...DEFAULTS.RATINGS],
     showInfo: false,
   },
   computed: {
@@ -161,16 +169,15 @@ new Vue({
       this.includeSpecials = !this.includeSpecials;
     },
     togglePackage(pkg) {
-      const allPackages = ["single", "pack", "case"];
-      if (this.selectedPackages.length === allPackages.length) {
+      if (this.selectedPackages.length === DEFAULTS.PACKAGES.length) {
         this.selectedPackages = [pkg];
       } else if (this.selectedPackages.length === 1 && this.selectedPackages[0] === pkg) {
-        this.selectedPackages = [...allPackages];
+        this.selectedPackages = [...DEFAULTS.PACKAGES];
       } else {
         if (this.selectedPackages.includes(pkg)) {
           this.selectedPackages = this.selectedPackages.filter(p => p !== pkg);
           if (this.selectedPackages.length === 0) {
-            this.selectedPackages = [...allPackages];
+            this.selectedPackages = [...DEFAULTS.PACKAGES];
           }
         } else {
           this.selectedPackages.push(pkg);
@@ -178,16 +185,15 @@ new Vue({
       }
     },
     toggleVessel(vessel) {
-      const allVessels = ["can", "bottle", "longneck"];
-      if (this.selectedVessels.length === allVessels.length) {
+      if (this.selectedVessels.length === DEFAULTS.VESSELS.length) {
         this.selectedVessels = [vessel];
       } else if (this.selectedVessels.length === 1 && this.selectedVessels[0] === vessel) {
-        this.selectedVessels = [...allVessels];
+        this.selectedVessels = [...DEFAULTS.VESSELS];
       } else {
         if (this.selectedVessels.includes(vessel)) {
           this.selectedVessels = this.selectedVessels.filter(v => v !== vessel);
           if (this.selectedVessels.length === 0) {
-            this.selectedVessels = [...allVessels];
+            this.selectedVessels = [...DEFAULTS.VESSELS];
           }
         } else {
           this.selectedVessels.push(vessel);
@@ -195,21 +201,15 @@ new Vue({
       }
     },
     toggleRating(ratingCat) {
-      const allRatings = ["Crap", "Ok", "Great", "Legendary"];
-      // If all are selected, clicking one selects only that one
-      if (this.selectedRatings.length === allRatings.length) {
+      if (this.selectedRatings.length === DEFAULTS.RATINGS.length) {
         this.selectedRatings = [ratingCat];
-      }
-      // If only one is active and it's clicked again, reset to all
-      else if (this.selectedRatings.length === 1 && this.selectedRatings[0] === ratingCat) {
-        this.selectedRatings = [...allRatings];
-      }
-      // Otherwise, toggle normally
-      else {
+      } else if (this.selectedRatings.length === 1 && this.selectedRatings[0] === ratingCat) {
+        this.selectedRatings = [...DEFAULTS.RATINGS];
+      } else {
         if (this.selectedRatings.includes(ratingCat)) {
           this.selectedRatings = this.selectedRatings.filter(r => r !== ratingCat);
           if (this.selectedRatings.length === 0) {
-            this.selectedRatings = [...allRatings];
+            this.selectedRatings = [...DEFAULTS.RATINGS];
           }
         } else {
           this.selectedRatings.push(ratingCat);
@@ -233,21 +233,15 @@ new Vue({
       }
     },
     toggleStrength(strength) {
-      const allStrengths = ["Light", "Mid", "Full", "Strong"];
-      // If all are selected, clicking one selects only that one.
-      if (this.selectedStrengths.length === allStrengths.length) {
+      if (this.selectedStrengths.length === DEFAULTS.STRENGTHS.length) {
         this.selectedStrengths = [strength];
-      }
-      // If only one is active and it's clicked again, reset to all.
-      else if (this.selectedStrengths.length === 1 && this.selectedStrengths[0] === strength) {
-        this.selectedStrengths = [...allStrengths];
-      }
-      // Otherwise, toggle in/out as normal.
-      else {
+      } else if (this.selectedStrengths.length === 1 && this.selectedStrengths[0] === strength) {
+        this.selectedStrengths = [...DEFAULTS.STRENGTHS];
+      } else {
         if (this.selectedStrengths.includes(strength)) {
           this.selectedStrengths = this.selectedStrengths.filter(s => s !== strength);
           if (this.selectedStrengths.length === 0) {
-            this.selectedStrengths = [...allStrengths];
+            this.selectedStrengths = [...DEFAULTS.STRENGTHS];
           }
         } else {
           this.selectedStrengths.push(strength);
@@ -257,10 +251,10 @@ new Vue({
     resetFilters() {
       this.searchQuery = "";
       this.includeSpecials = true;
-      this.selectedPackages = ["single", "pack", "case"];
-      this.selectedVessels = ["can", "bottle", "longneck"];
-      this.selectedStrengths = ["Light", "Mid", "Full", "Strong"];
-      this.selectedRatings =  ["Crap", "Ok", "Great", "Legendary"];
+      this.selectedPackages = [...DEFAULTS.PACKAGES];
+      this.selectedVessels = [...DEFAULTS.VESSELS];
+      this.selectedStrengths = [...DEFAULTS.STRENGTHS];
+      this.selectedRatings = [...DEFAULTS.RATINGS];
     },
     fetchData() {
       fetch(dataUrl)
@@ -312,26 +306,22 @@ new Vue({
       }
       
       // Package filters
-      const defaultPackages = ["single", "pack", "case"];
-      if (this.selectedPackages.slice().sort().join(",") !== defaultPackages.slice().sort().join(",")) {
+      if (this.selectedPackages.slice().sort().join(",") !== DEFAULTS.PACKAGES.slice().sort().join(",")) {
         params.set("packages", this.selectedPackages.join(","));
       }
       
       // Vessel filters
-      const defaultVessels = ["can", "bottle", "longneck"];
-      if (this.selectedVessels.slice().sort().join(",") !== defaultVessels.slice().sort().join(",")) {
+      if (this.selectedVessels.slice().sort().join(",") !== DEFAULTS.VESSELS.slice().sort().join(",")) {
         params.set("vessels", this.selectedVessels.join(","));
       }
       
       // Strength filters
-      const defaultStrengths = ["Light", "Mid", "Full", "Strong"];
-      if (this.selectedStrengths.slice().sort().join(",") !== defaultStrengths.slice().sort().join(",")) {
+      if (this.selectedStrengths.slice().sort().join(",") !== DEFAULTS.STRENGTHS.slice().sort().join(",")) {
         params.set("strengths", this.selectedStrengths.join(","));
       }
       
       // Rating filters
-      const defaultRatings = ["Crap", "Ok", "Great", "Legendary"];
-      if (this.selectedRatings.slice().sort().join(",") !== defaultRatings.slice().sort().join(",")) {
+      if (this.selectedRatings.slice().sort().join(",") !== DEFAULTS.RATINGS.slice().sort().join(",")) {
         params.set("ratings", this.selectedRatings.join(","));
       }
       
