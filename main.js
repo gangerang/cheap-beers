@@ -6,7 +6,7 @@ const DEFAULTS = {
   PACKAGES: ["single", "pack", "case"],
   VESSELS: ["can", "bottle", "longneck"],
   STRENGTHS: ["Light", "Mid", "Full", "Strong"],
-  RATINGS: ["Crap", "Ok", "Great", "Legendary"]
+  RATINGS: ["Undrinkable", "Ok", "Great", "Legendary"]
 };
 
 new Vue({
@@ -143,7 +143,7 @@ new Vue({
       if (rating == null) return "?";
       const num = parseFloat(rating);
       if (isNaN(num)) return "🤨?";
-      if (num < 3.5) return "Crap";
+      if (num < 3.5) return "Undrinkable";
       if (num < 4) return "Just ok";
       if (num < 4.5) return "Good enough";
       if (num <= 4.8) return "Great";
@@ -153,7 +153,7 @@ new Vue({
     mapRatingCategory(ratingText) {
       // Combine "Just ok" and "Good enough" into "Ok"
       if (ratingText === "Just ok" || ratingText === "Good enough") return "Ok";
-      // Otherwise, it’s already crap, Great, or Legendary
+      // Otherwise, it’s already Undrinkable, Great, or Legendary
       return ratingText;
     },
     // Use the provided image URL directly. In case of an error, fall back to a beer icon.
