@@ -259,6 +259,8 @@ new Vue({
       this.includeSpecials = true;
       this.selectedPackages = ["single", "pack", "case"];
       this.selectedVessels = ["can", "bottle", "longneck"];
+      this.selectedStrengths = ["Light", "Mid", "Full", "Strong"];
+      this.selectedRatings =  ["Crap", "Ok", "Great", "Legendary"];
     },
     fetchData() {
       fetch(dataUrl)
