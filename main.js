@@ -22,7 +22,8 @@ new Vue({
     selectedRatings: [...DEFAULTS.RATINGS],
     showInfo: false,
     showToast: false,
-    showFilters: false  // Add this line
+    showFilters: false,  // Add this line
+    loadMoreObserver: null,  // Add this line
   },
   computed: {
     // Flatten each beer record into separate pricing “cards.”
@@ -354,9 +355,40 @@ new Vue({
     toggleFilters() {
       this.showFilters = !this.showFilters;
     },
+    setupInfiniteScroll() {
+      // Create observer for infinite scrolling
+      this.loadMoreObserver = new IntersectionObserver(entries => {
+        const target = entries[0];
+        if (target.isIntersecting && this.displayedBeers.length < this.filteredBeers.length) {
+          this.loadMore();
+        }
+      }, {
+        root: null,
+        rootMargin: '100px',  // Start loading when within 100px of the bottom
+        threshold: 0.1
+      });
+    }
   },
   created() {
     this.applyUrlParams();
     this.fetchData();
+  },
+  mounted() {
+    this.setupInfiniteScroll();
+  },
+  updated() {
+    // Update the observer target when the DOM changes
+    this.$nextTick(() => {
+      const loadMoreButton = document.querySelector('.btn-load-more');
+      if (loadMoreButton) {
+        this.loadMoreObserver.observe(loadMoreButton);
+      }
+    });
+  },
+  beforeDestroy() {
+    // Clean up the observer
+    if (this.loadMoreObserver) {
+      this.loadMoreObserver.disconnect();
+    }
   }
 });
