@@ -194,7 +194,7 @@ new Vue({
       }
     },
     toggleRating(ratingCat) {
-      const allRatings = ["crap", "Ok", "Great", "Legendary"];
+      const allRatings = ["Crap", "Ok", "Great", "Legendary"];
       // If all are selected, clicking one selects only that one
       if (this.selectedRatings.length === allRatings.length) {
         this.selectedRatings = [ratingCat];
@@ -327,7 +327,7 @@ new Vue({
       }
       
       // Rating filters
-      const defaultRatings = ["crap", "ok", "Great", "Legendary"];
+      const defaultRatings = ["Crap", "Ok", "Great", "Legendary"];
       if (this.selectedRatings.slice().sort().join(",") !== defaultRatings.slice().sort().join(",")) {
         params.set("ratings", this.selectedRatings.join(","));
       }
