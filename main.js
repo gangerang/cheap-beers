@@ -1,5 +1,5 @@
 const LOAD_COUNT = 48;
-const dataUrl = "https://raw.githubusercontent.com/gangerang/alculator-data/master/datasets_cleaned/beer.json";
+const dataUrl = "https://raw.githubusercontent.com/gangerang/cheap-beers-data/master/datasets_cleaned/beer.json";
 
 new Vue({
   el: '#app',
