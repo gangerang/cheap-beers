@@ -21,14 +21,12 @@ header {
   color: #333;
   padding: 1.5rem;
   text-align: center;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 header h1 {
   font-weight: 500;
   font-size: 2rem;
 }
-
-/* Header layout */
 .header-content {
   display: flex;
   justify-content: center;
@@ -36,10 +34,8 @@ header h1 {
   position: relative;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 3rem;  /* Add padding for button space */
+  padding: 0 3rem;
 }
-
-/* Info button */
 .info-button {
   position: absolute;
   right: 1rem;
@@ -48,6 +44,22 @@ header h1 {
   font-size: 1.5rem;
   cursor: pointer;
   padding: 0.5rem;
+}
+.header-buttons {
+  position: absolute;
+  right: 0.5rem;
+  display: flex;
+  gap: 0.25rem;
+}
+.header-button {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.4rem;
+}
+.header-button:hover {
+  opacity: 0.8;
 }
 
 /* Modal */
@@ -63,7 +75,6 @@ header h1 {
   align-items: center;
   z-index: 1000;
 }
-
 .modal-content {
   background: white;
   padding: 2rem;
@@ -73,14 +84,12 @@ header h1 {
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  text-align: left;  
+  text-align: left;
 }
-
 .modal-content h2 {
-  text-align: center;  /* Keep the heading centered */
+  text-align: center;
   margin-bottom: 1.5rem;
 }
-
 .close-button {
   position: absolute;
   top: 1rem;
@@ -91,128 +100,115 @@ header h1 {
   cursor: pointer;
   padding: 0.5rem;
 }
-
 .modal-body {
   margin-top: 1rem;
-  text-align: left;  /* Ensure modal body is left-aligned */
+  text-align: left;
 }
-
 .modal-body p {
   margin-bottom: 1rem;
 }
-
 .modal-body ul {
   margin-bottom: 1rem;
   padding-left: 1.5rem;
 }
-
 .modal-body li {
   margin-bottom: 0.5rem;
 }
-
-/* Modal link styles */
 .modal-body a {
-  color: #0066cc;  /* Standard blue color */
+  color: #0066cc;
   text-decoration: underline;
 }
-
 .modal-body a:hover {
-  color: #004499;  /* Darker blue on hover */
+  color: #004499;
 }
 
-/* Container */
+/* Layout & Containers */
 .container {
   max-width: 1200px;
-  margin: 0.5rem auto;  /* Reduced from 2rem to 0.5rem */
+  margin: 0.5rem auto;
   padding: 0 1rem;
 }
+.row {
+  margin-bottom: 0.25rem;
+  text-align: center;
+}
 
-/* Common fixed width for top rows */
+/* Search & Filter Layout */
 .fixed-width {
   width: 480px;
   margin: 0 auto;
 }
-
-/* Row styling */
-.row {
-  margin-bottom: 0.25rem;  /* Reduced from 0.5rem to 0.25rem */
-  text-align: center;
-}
-
-/* Search Container */
-.search-container {
-  /* Use .fixed-width container for centering */
-}
-.input-search {
-  padding: 0.4rem;  /* Reduced from 0.6rem to 0.4rem */
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 0.9rem;  /* Slightly smaller font */
-  width: 100%;
-  text-align: left;
-}
-
-/* Filter Buttons for both rows */
-.filter-row {
-  display: flex;
+.search-row {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 0.2rem;
   width: 480px;
   margin: 0 auto;
+}
+.filter-row {
+  display: flex;
+  gap: 0.2rem;
+  width: 480px;
+  margin: 0 auto;
+}
+.input-search {
+  width: 100%;
+  padding: 0.4rem;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin: 0;
+}
+.toggle-filters {
+  width: 100%;
+  white-space: nowrap;
+  margin: 0;
 }
 
 /* Filter Buttons */
 .filter-button {
   flex: 1;
-  padding: 0.4rem;  /* Reduced from 0.6rem to 0.4rem */
+  padding: 0.4rem;
+  font-size: 0.9rem;
+  margin: 0;
   border: 1px solid #ccc;
   border-radius: 4px;
-  background: #FFC107;  /* Default yellow background */
+  background: #FFC107;
   color: #000;
-  font-size: 0.9rem;  /* Slightly smaller font */
-  margin: 0 0.2rem;
   cursor: pointer;
   transition: background 0.3s;
 }
-
 .filter-button:not(.active) {
   background: #f4f7f6;
 }
-
 .filter-button.active {
-  background: #FFC107 !important;  /* Force yellow for active state */
+  background: #FFC107 !important;
   color: #000;
 }
-
-/* Override sticky filter backgrounds */
 .sticky-filters .filter-button {
-  background: #FFC107;  /* Default yellow in sticky state */
+  background: #FFC107;
 }
-
 .sticky-filters .filter-button:not(.active) {
-  background: #f4f7f6;  /* Grey when not active in sticky state */
+  background: #f4f7f6;
 }
-
 .sticky-filters .filter-button.active {
-  background: #FFC107 !important;  /* Force yellow for active state in sticky */
+  background: #FFC107 !important;
 }
-
-/* Ensure the reset button is always yellow */
 .filter-button.reset-button {
   background: #FFC107 !important;
   color: #000;
 }
 
-/* Beer Grid */
+/* Beer Grid & Cards */
 .beer-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 1.5rem;
 }
-
-/* Beer Card */
 .beer-card {
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: transform 0.2s;
 }
@@ -228,34 +224,27 @@ header h1 {
   font-weight: 500;
   color: #000;
 }
-
-/* Flex Layout for Beer Details and Image */
 .beer-details-and-image {
   display: flex;
-  flex-wrap: nowrap;
   justify-content: space-between;
   align-items: flex-start;
 }
-
 .beer-details {
   flex: 1 1 auto;
   min-width: 0;
 }
-
 .beer-image-container {
   flex-shrink: 0;
   margin-left: 0;
   margin-top: auto;
   width: 140px;
 }
-
 .beer-image {
   width: 100%;
   height: 180px;
   object-fit: contain;
   background: #fff;
 }
-
 .beer-info {
   font-size: 0.9rem;
   margin-bottom: 0.3rem;
@@ -263,15 +252,13 @@ header h1 {
 .beer-info span {
   font-weight: 500;
 }
-
 .standard-price {
-  font-size: 1.2rem;  /* same as .beer-title */
-  font-weight: 500;   /* same as .beer-title */
-  color: #000;        /* same as .beer-title */
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #000;
   text-align: center;
-  margin-bottom: 0.5rem; /* adjust spacing as needed */
+  margin-bottom: 0.5rem;
 }
-
 .no-results {
   text-align: center;
   margin-top: 2rem;
@@ -297,28 +284,7 @@ header h1 {
   background: #FFB300;
 }
 
-/* Header buttons container */
-.header-buttons {
-  position: absolute;
-  right: 0.5rem;  /* Reduced from 1rem */
-  display: flex;
-  gap: 0.25rem;  /* Reduced from 0.5rem */
-}
-
-/* Header button style (applies to both info and link buttons) */
-.header-button {
-  background: none;
-  border: none;
-  font-size: 1.25rem;  /* Slightly smaller font size */
-  cursor: pointer;
-  padding: 0.4rem;  /* Reduced padding */
-}
-
-.header-button:hover {
-  opacity: 0.8;
-}
-
-/* Toast notification */
+/* Toast Notification */
 .toast {
   position: fixed;
   top: 50%;
@@ -334,7 +300,6 @@ header h1 {
   animation: fadeInOut 2s ease-in-out;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
-
 @keyframes fadeInOut {
   0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
   20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
@@ -342,95 +307,48 @@ header h1 {
   100% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
 }
 
-/* Search row layout */
-.search-row {
-  display: grid;
-  grid-template-columns: 3fr 1fr;
-  gap: 0.4rem;
-}
-
-.input-search {
-  padding: 0.4rem;  /* Reduced from 0.6rem to 0.4rem */
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 0.9rem;  /* Slightly smaller font */
-  width: 100%;
-  text-align: left;
-}
-
-.toggle-filters {
-  width: 100%;
-  white-space: nowrap;
-}
-
-/* Filters section animation */
+/* Sticky Filters & Animated Section */
 .filters-section {
-  transition: all 0.3s ease-in-out;
-  margin-top: 0.25rem;  /* Reduced from 0.5rem to 0.25rem */
+  transition: max-height 0.3s ease-out;
+  overflow: hidden;
+  margin-top: 0.25rem;
 }
-
-/* Sticky filters */
 .sticky-filters {
   position: sticky;
   top: 0;
   background: #f4f7f6;
   z-index: 100;
-  padding: 0.25rem 0;  /* Reduced from 0.5rem to 0.25rem */
+  padding: 0.25rem 0;
   border-bottom: 1px solid #e0e0e0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
-/* Add padding to main content to prevent jump when filters become sticky */
-.main-content {
-  padding-top: 0.5rem;  /* Reduced from 1rem to 0.5rem */
-}
-
-/* Ensure filters are readable when sticky */
 .sticky-filters .input-search,
 .sticky-filters .filter-button {
   background: white;
 }
 
-/* Adjust existing container padding */
-.container {
-  padding: 0 1rem;
-}
-
-/* Smooth transition for filters section */
-.filters-section {
-  transition: max-height 0.3s ease-out;
-  overflow: hidden;
-}
-
-/* Responsive Adjustments */
+/* Mobile Adjustments */
 @media (max-width: 600px) {
-  .fixed-width {
-    width: 100%;
-  }
+  .fixed-width,
+  .search-row,
   .filter-row {
     width: 100%;
+    padding: 0 1rem;
   }
   .beer-grid {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
   .header-content {
-    padding: 0 2.5rem;  /* Smaller padding on mobile */
+    padding: 0 2.5rem;
   }
-  
   .header-buttons {
-    right: 0.25rem;  /* Even closer to edge on mobile */
+    right: 0.25rem;
   }
-  
   .header-button {
-    font-size: 1.1rem;  /* Smaller icons on mobile */
-    padding: 0.3rem;  /* Smaller padding on mobile */
+    font-size: 1.1rem;
+    padding: 0.3rem;
   }
-  
   header h1 {
-    font-size: 1.5rem;  /* Smaller title on mobile */
-  }
-  
-  .search-row {
-    grid-template-columns: 2fr 1fr;
+    font-size: 1.5rem;
   }
 }
