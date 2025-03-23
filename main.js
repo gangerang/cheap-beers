@@ -65,9 +65,11 @@ new Vue({
               // Build the full image URL using the provided image name.
               image_url: "https://media.danmurphys.com.au/dmo/product/" + beer.properties.image_url,
               // Map numeric rating to word.
+              rating: beer.properties.rating,
               ratingText,
               ratingCategory,
-              // Removed IBU and beer_style.
+              beer_style: beer.properties.beer_style,
+              ibu: beer.properties.ibu,
               package: pkgType,
               package_special: isSpecial,                        // Flag indicating special pricing.
               package_size: pricingData.units,                   // Units per package.
@@ -116,11 +118,14 @@ new Vue({
 
         available = available.filter(beer => {
           const searchable = [
-            beer.name || '',
-            beer.vessel || '',
-            beer.package || '',
-            beer.size ? beer.size.toString() : '',
-            beer.package_size ? beer.package_size.toString() : ''
+            beer.name || '',                    // Full name
+            beer.name_clean || '',              // Clean name without size
+            beer.brand || '',                   // Brand name
+            beer.vessel || '',                  // Vessel type
+            beer.package || '',                 // Package type
+            beer.size ? beer.size.toString() : '',  // Size in mL
+            beer.package_size ? beer.package_size.toString() : '',  // Units per package
+            beer.beer_style || ''               // Beer style (XPA, etc)
           ].join(' ').toLowerCase();
 
           // Match if ANY of the search terms are found (OR logic)
