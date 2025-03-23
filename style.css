@@ -36,6 +36,7 @@ header h1 {
   position: relative;
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 3rem;  /* Add padding for button space */
 }
 
 /* Info button */
@@ -281,18 +282,18 @@ header h1 {
 /* Header buttons container */
 .header-buttons {
   position: absolute;
-  right: 1rem;
+  right: 0.5rem;  /* Reduced from 1rem */
   display: flex;
-  gap: 0.5rem;
+  gap: 0.25rem;  /* Reduced from 0.5rem */
 }
 
 /* Header button style (applies to both info and link buttons) */
 .header-button {
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.25rem;  /* Slightly smaller font size */
   cursor: pointer;
-  padding: 0.5rem;
+  padding: 0.4rem;  /* Reduced padding */
 }
 
 .header-button:hover {
@@ -333,5 +334,21 @@ header h1 {
   }
   .beer-grid {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+  .header-content {
+    padding: 0 2.5rem;  /* Smaller padding on mobile */
+  }
+  
+  .header-buttons {
+    right: 0.25rem;  /* Even closer to edge on mobile */
+  }
+  
+  .header-button {
+    font-size: 1.1rem;  /* Smaller icons on mobile */
+    padding: 0.3rem;  /* Smaller padding on mobile */
+  }
+  
+  header h1 {
+    font-size: 1.5rem;  /* Smaller title on mobile */
   }
 }
