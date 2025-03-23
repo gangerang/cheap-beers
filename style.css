@@ -278,6 +278,27 @@ header h1 {
   background: #FFB300;
 }
 
+/* Header buttons container */
+.header-buttons {
+  position: absolute;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Header button style (applies to both info and link buttons) */
+.header-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.header-button:hover {
+  opacity: 0.8;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 600px) {
   .fixed-width {
