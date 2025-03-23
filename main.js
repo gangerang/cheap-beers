@@ -11,7 +11,7 @@ new Vue({
     selectedPackages: ["single", "pack", "case"],  // Filter by base package type.
     selectedVessels: ["can", "bottle", "longneck"],
     selectedStrengths: ["Light", "Mid", "Full", "Extra full"],
-    selectedRatings: ["Undrinkable", "Ok / Good", "Great!", "Legendary"],
+    selectedRatings: ["Crap", "Ok", "Great", "Legendary"],
   },
   computed: {
     // Flatten each beer record into separate pricing “cards.”
@@ -132,17 +132,17 @@ new Vue({
       if (rating == null) return "?";
       const num = parseFloat(rating);
       if (isNaN(num)) return "🤨?";
-      if (num < 3.5) return "Undrinkable";
+      if (num < 3.5) return "Crap";
       if (num < 4) return "Just ok";
       if (num < 4.5) return "Good enough";
-      if (num <= 4.8) return "Great!";
+      if (num <= 4.8) return "Great";
       return "Legendary";
     },
     // 4 categories for filtering (combine Ok and Good)
     mapRatingCategory(ratingText) {
-      // Combine "Just ok" and "Good enough" into "Ok / Good"
-      if (ratingText === "Just ok" || ratingText === "Good enough") return "Ok / Good";
-      // Otherwise, it’s already Undrinkable, Great!, or Legendary
+      // Combine "Just ok" and "Good enough" into "Ok"
+      if (ratingText === "Just ok" || ratingText === "Good enough") return "Ok";
+      // Otherwise, it’s already Crap, Great, or Legendary
       return ratingText;
     },
     // Use the provided image URL directly. In case of an error, fall back to a beer icon.
@@ -194,7 +194,7 @@ new Vue({
       }
     },
     toggleRating(ratingCat) {
-      const allRatings = ["Undrinkable", "Ok / Good", "Great!", "Legendary"];
+      const allRatings = ["Crap", "Ok", "Great", "Legendary"];
       // If all are selected, clicking one selects only that one
       if (this.selectedRatings.length === allRatings.length) {
         this.selectedRatings = [ratingCat];
