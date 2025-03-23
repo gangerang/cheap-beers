@@ -10,8 +10,8 @@ new Vue({
     includeSpecials: true,            // Specials filter: when true, use special pricing if available.
     selectedPackages: ["single", "pack", "case"],  // Filter by base package type.
     selectedVessels: ["can", "bottle", "longneck"],
-    selectedStrengths: ["Light", "Mid", "Full", "Extra full"],
-    selectedRatings: ["Crap", "Ok", "Great", "Legendary"],
+    selectedStrengths: ["Light", "Mid", "Full", "Strong"],
+    selectedRatings: ["crap", "ok", "Great", "Legendary"],
   },
   computed: {
     // Flatten each beer record into separate pricing “cards.”
@@ -142,7 +142,7 @@ new Vue({
     mapRatingCategory(ratingText) {
       // Combine "Just ok" and "Good enough" into "Ok"
       if (ratingText === "Just ok" || ratingText === "Good enough") return "Ok";
-      // Otherwise, it’s already Crap, Great, or Legendary
+      // Otherwise, it’s already crap, Great, or Legendary
       return ratingText;
     },
     // Use the provided image URL directly. In case of an error, fall back to a beer icon.
@@ -194,7 +194,7 @@ new Vue({
       }
     },
     toggleRating(ratingCat) {
-      const allRatings = ["Crap", "Ok", "Great", "Legendary"];
+      const allRatings = ["crap", "Ok", "Great", "Legendary"];
       // If all are selected, clicking one selects only that one
       if (this.selectedRatings.length === allRatings.length) {
         this.selectedRatings = [ratingCat];
@@ -220,19 +220,19 @@ new Vue({
       if (percentage < 3) return "Light";
       if (percentage <= 4) return "Mid";
       if (percentage <= 5.5) return "Full";
-      return "Extra full";
+      return "Strong";
     },
     computeStrengthEmoji(category) {
       switch (category) {
         case "Light": return "🍺";
         case "Mid": return "🍺🍺";
         case "Full": return "🍺🍺🍺";
-        case "Extra full": return "🍺🍺🍺🍺";
+        case "Strong": return "🍺🍺🍺🍺";
         default: return "";
       }
     },
     toggleStrength(strength) {
-      const allStrengths = ["Light", "Mid", "Full", "Extra full"];
+      const allStrengths = ["Light", "Mid", "Full", "Strong"];
       // If all are selected, clicking one selects only that one.
       if (this.selectedStrengths.length === allStrengths.length) {
         this.selectedStrengths = [strength];
@@ -297,20 +297,41 @@ new Vue({
     },
     buildShareUrl() {
       const params = new URLSearchParams();
+      
+      // Search query
       if (this.searchQuery) {
         params.set("q", this.searchQuery);
       }
+      
+      // Specials filter
       if (this.includeSpecials !== true) {
         params.set("specials", this.includeSpecials);
       }
+      
+      // Package filters
       const defaultPackages = ["single", "pack", "case"];
       if (this.selectedPackages.slice().sort().join(",") !== defaultPackages.slice().sort().join(",")) {
         params.set("packages", this.selectedPackages.join(","));
       }
+      
+      // Vessel filters
       const defaultVessels = ["can", "bottle", "longneck"];
       if (this.selectedVessels.slice().sort().join(",") !== defaultVessels.slice().sort().join(",")) {
         params.set("vessels", this.selectedVessels.join(","));
       }
+      
+      // Strength filters
+      const defaultStrengths = ["Light", "Mid", "Full", "Strong"];
+      if (this.selectedStrengths.slice().sort().join(",") !== defaultStrengths.slice().sort().join(",")) {
+        params.set("strengths", this.selectedStrengths.join(","));
+      }
+      
+      // Rating filters
+      const defaultRatings = ["crap", "ok", "Great", "Legendary"];
+      if (this.selectedRatings.slice().sort().join(",") !== defaultRatings.slice().sort().join(",")) {
+        params.set("ratings", this.selectedRatings.join(","));
+      }
+      
       const baseUrl = window.location.origin + window.location.pathname;
       const shareUrl = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
       return shareUrl;
@@ -325,6 +346,7 @@ new Vue({
     },
     applyUrlParams() {
       const params = new URLSearchParams(window.location.search);
+      
       if (params.has("q")) {
         this.searchQuery = params.get("q");
       }
@@ -336,6 +358,12 @@ new Vue({
       }
       if (params.has("vessels")) {
         this.selectedVessels = params.get("vessels").split(",");
+      }
+      if (params.has("strengths")) {
+        this.selectedStrengths = params.get("strengths").split(",");
+      }
+      if (params.has("ratings")) {
+        this.selectedRatings = params.get("ratings").split(",");
       }
     }
   },
