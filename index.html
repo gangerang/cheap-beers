@@ -45,62 +45,69 @@
         </div>
       </div>
     </header>
-    <div class="container">
-      <!-- Search row with show filters button -->
-      <div class="row">
-        <div class="fixed-width search-row">
-          <input type="text" v-model="searchQuery" placeholder="find your beer..." class="input-search">
-          <button class="filter-button toggle-filters" 
-                  :class="{'active': showFilters}" 
-                  @click="toggleFilters">
-            Filters
-          </button>
-        </div>
-      </div>
-      
-      <!-- Collapsible filters section -->
-      <div class="filters-section" v-show="showFilters">
-        <!-- special + single/pack/case -->
+
+    <!-- Move filters into a sticky container -->
+    <div class="sticky-filters">
+      <div class="container">
+        <!-- Search row with show filters button -->
         <div class="row">
-          <div class="fixed-width filter-row">
-            <button class="filter-button" :class="{'active': includeSpecials}" @click="toggleSpecials">Specials</button>
-            <button class="filter-button" :class="{'active': selectedPackages.includes('single')}" @click="togglePackage('single')">Singles</button>
-            <button class="filter-button" :class="{'active': selectedPackages.includes('pack')}" @click="togglePackage('pack')">Packs</button>
-            <button class="filter-button" :class="{'active': selectedPackages.includes('case')}" @click="togglePackage('case')">Cases</button>
+          <div class="fixed-width search-row">
+            <input type="text" v-model="searchQuery" placeholder="find your beer..." class="input-search">
+            <button class="filter-button toggle-filters" 
+                    :class="{'active': showFilters}" 
+                    @click="toggleFilters">
+              Filters
+            </button>
           </div>
         </div>
-           
-        <!-- strength -->
-        <div class="row">
-          <div class="fixed-width filter-row">
-            <button class="filter-button" :class="{'active': selectedStrengths.includes('Light')}" @click="toggleStrength('Light')">Light</button>
-            <button class="filter-button" :class="{'active': selectedStrengths.includes('Mid')}" @click="toggleStrength('Mid')">Mid</button>
-            <button class="filter-button" :class="{'active': selectedStrengths.includes('Full')}" @click="toggleStrength('Full')">Full</button>
-            <button class="filter-button" :class="{'active': selectedStrengths.includes('Strong')}" @click="toggleStrength('Strong')">Strong</button>
+        
+        <!-- Collapsible filters section -->
+        <div class="filters-section" v-show="showFilters">
+          <!-- special + single/pack/case -->
+          <div class="row">
+            <div class="fixed-width filter-row">
+              <button class="filter-button" :class="{'active': includeSpecials}" @click="toggleSpecials">Specials</button>
+              <button class="filter-button" :class="{'active': selectedPackages.includes('single')}" @click="togglePackage('single')">Singles</button>
+              <button class="filter-button" :class="{'active': selectedPackages.includes('pack')}" @click="togglePackage('pack')">Packs</button>
+              <button class="filter-button" :class="{'active': selectedPackages.includes('case')}" @click="togglePackage('case')">Cases</button>
+            </div>
+          </div>
+             
+          <!-- strength -->
+          <div class="row">
+            <div class="fixed-width filter-row">
+              <button class="filter-button" :class="{'active': selectedStrengths.includes('Light')}" @click="toggleStrength('Light')">Light</button>
+              <button class="filter-button" :class="{'active': selectedStrengths.includes('Mid')}" @click="toggleStrength('Mid')">Mid</button>
+              <button class="filter-button" :class="{'active': selectedStrengths.includes('Full')}" @click="toggleStrength('Full')">Full</button>
+              <button class="filter-button" :class="{'active': selectedStrengths.includes('Strong')}" @click="toggleStrength('Strong')">Strong</button>
+            </div>      
+          </div>
+          
+          <!-- rating -->
+          <div class="row">
+            <div class="fixed-width filter-row">
+              <button class="filter-button" :class="{'active': selectedRatings.includes('Crap')}" @click="toggleRating('Crap')">Crap</button>
+              <button class="filter-button" :class="{'active': selectedRatings.includes('Ok')}" @click="toggleRating('Ok')">Ok</button>
+              <button class="filter-button" :class="{'active': selectedRatings.includes('Great')}" @click="toggleRating('Great')">Great</button>
+              <button class="filter-button" :class="{'active': selectedRatings.includes('Legendary')}" @click="toggleRating('Legendary')">Legendary</button>
+            </div>
           </div>      
-        </div>
-        
-        <!-- rating -->
-        <div class="row">
-          <div class="fixed-width filter-row">
-            <button class="filter-button" :class="{'active': selectedRatings.includes('Crap')}" @click="toggleRating('Crap')">Crap</button>
-            <button class="filter-button" :class="{'active': selectedRatings.includes('Ok')}" @click="toggleRating('Ok')">Ok</button>
-            <button class="filter-button" :class="{'active': selectedRatings.includes('Great')}" @click="toggleRating('Great')">Great</button>
-            <button class="filter-button" :class="{'active': selectedRatings.includes('Legendary')}" @click="toggleRating('Legendary')">Legendary</button>
-          </div>
-        </div>      
-        
-        <!-- reset + vessel -->
-        <div class="row">
-          <div class="fixed-width filter-row">
-            <button class="filter-button reset-button" @click="resetFilters">Reset</button>
-            <button class="filter-button" :class="{'active': selectedVessels.includes('can')}" @click="toggleVessel('can')">Can</button>
-            <button class="filter-button" :class="{'active': selectedVessels.includes('bottle')}" @click="toggleVessel('bottle')">Bottle</button>
-            <button class="filter-button" :class="{'active': selectedVessels.includes('longneck')}" @click="toggleVessel('longneck')">Longneck</button>
+          
+          <!-- reset + vessel -->
+          <div class="row">
+            <div class="fixed-width filter-row">
+              <button class="filter-button reset-button" @click="resetFilters">Reset</button>
+              <button class="filter-button" :class="{'active': selectedVessels.includes('can')}" @click="toggleVessel('can')">Can</button>
+              <button class="filter-button" :class="{'active': selectedVessels.includes('bottle')}" @click="toggleVessel('bottle')">Bottle</button>
+              <button class="filter-button" :class="{'active': selectedVessels.includes('longneck')}" @click="toggleVessel('longneck')">Longneck</button>
+            </div>
           </div>
         </div>
       </div>
-      
+    </div>
+
+    <!-- Main content container -->
+    <div class="container main-content">
       <div v-if="displayedBeers.length === 0 && searchQuery && beers.length > 0" class="no-results">
         No beers match your search query.
       </div>

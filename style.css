@@ -157,24 +157,41 @@ header h1 {
   width: 480px;
   margin: 0 auto;
 }
+
+/* Filter Buttons */
 .filter-button {
   flex: 1;
   padding: 0.6rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  background: #FFC107;
+  background: #FFC107;  /* Default yellow background */
   color: #000;
   font-size: 1rem;
   margin: 0 0.2rem;
   cursor: pointer;
   transition: background 0.3s;
 }
+
 .filter-button:not(.active) {
   background: #f4f7f6;
 }
+
 .filter-button.active {
-  background: #FFC107;
+  background: #FFC107 !important;  /* Force yellow for active state */
   color: #000;
+}
+
+/* Override sticky filter backgrounds */
+.sticky-filters .filter-button {
+  background: #FFC107;  /* Default yellow in sticky state */
+}
+
+.sticky-filters .filter-button:not(.active) {
+  background: #f4f7f6;  /* Grey when not active in sticky state */
+}
+
+.sticky-filters .filter-button.active {
+  background: #FFC107 !important;  /* Force yellow for active state in sticky */
 }
 
 /* Ensure the reset button is always yellow */
@@ -349,6 +366,39 @@ header h1 {
 .filters-section {
   transition: all 0.3s ease-in-out;
   margin-top: 1rem;
+}
+
+/* Sticky filters */
+.sticky-filters {
+  position: sticky;
+  top: 0;
+  background: #f4f7f6;
+  z-index: 100;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Add padding to main content to prevent jump when filters become sticky */
+.main-content {
+  padding-top: 1rem;
+}
+
+/* Ensure filters are readable when sticky */
+.sticky-filters .input-search,
+.sticky-filters .filter-button {
+  background: white;
+}
+
+/* Adjust existing container padding */
+.container {
+  padding: 0 1rem;
+}
+
+/* Smooth transition for filters section */
+.filters-section {
+  transition: max-height 0.3s ease-out;
+  overflow: hidden;
 }
 
 /* Responsive Adjustments */
