@@ -60,17 +60,7 @@
           <button class="filter-button" :class="{'active': selectedPackages.includes('case')}" @click="togglePackage('case')">Cases</button>
         </div>
       </div>
-      
-      <!-- reset + vessel -->
-      <div class="row">
-        <div class="fixed-width filter-row">
-          <button class="filter-button reset-button" @click="resetFilters">Reset</button>
-          <button class="filter-button" :class="{'active': selectedVessels.includes('can')}" @click="toggleVessel('can')">Can</button>
-          <button class="filter-button" :class="{'active': selectedVessels.includes('bottle')}" @click="toggleVessel('bottle')">Bottle</button>
-          <button class="filter-button" :class="{'active': selectedVessels.includes('longneck')}" @click="toggleVessel('longneck')">Longneck</button>
-        </div>
-      </div>
-
+         
       <!-- strength -->
       <div class="row">
         <div class="fixed-width filter-row">
@@ -80,7 +70,7 @@
           <button class="filter-button" :class="{'active': selectedStrengths.includes('Strong')}" @click="toggleStrength('Strong')">Strong</button>
         </div>      
       </div>
-
+      
       <!-- rating -->
       <div class="row">
         <div class="fixed-width filter-row">
@@ -91,6 +81,15 @@
         </div>
       </div>      
       
+      <!-- reset + vessel -->
+      <div class="row">
+        <div class="fixed-width filter-row">
+          <button class="filter-button reset-button" @click="resetFilters">Reset</button>
+          <button class="filter-button" :class="{'active': selectedVessels.includes('can')}" @click="toggleVessel('can')">Can</button>
+          <button class="filter-button" :class="{'active': selectedVessels.includes('bottle')}" @click="toggleVessel('bottle')">Bottle</button>
+          <button class="filter-button" :class="{'active': selectedVessels.includes('longneck')}" @click="toggleVessel('longneck')">Longneck</button>
+        </div>
+      </div>
       
       <div v-if="displayedBeers.length === 0 && searchQuery && beers.length > 0" class="no-results">
         No beers match your search query.
