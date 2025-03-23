@@ -154,6 +154,15 @@ header h1 {
 .beer-info span {
   font-weight: 500;
 }
+
+.standard-price {
+  font-size: 1.2rem;  /* same as .beer-title */
+  font-weight: 500;   /* same as .beer-title */
+  color: #000;        /* same as .beer-title */
+  text-align: center;
+  margin-bottom: 0.5rem; /* adjust spacing as needed */
+}
+
 .no-results {
   text-align: center;
   margin-top: 2rem;

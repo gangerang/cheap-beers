@@ -76,8 +76,8 @@
       <div class="beer-grid" v-if="displayedBeers.length > 0">
         <div class="beer-card" v-for="(beer, index) in displayedBeers" :key="(beer.stockcode || '') + (beer.package || '') + index">
           <div class="beer-content">
-            <!-- Title now includes cost per standard -->
-            <div class="beer-title">{{ beer.name_clean }} - ${{ formatPrice(beer.cost_per_standard) }}</div>
+            <!-- Title -->
+            <div class="beer-title">{{ beer.name_clean }}</div>
             <div class="beer-details-and-image">
               <div class="beer-details">
                 <div class="beer-info"><span>Type:</span> {{ packagingInfo(beer) }}</div>
@@ -101,6 +101,8 @@
                   @error="handleImageError">             
                 </a>
                 <div v-else class="beer-image placeholder-image">No Image</div>
+                <!-- Standard price placed below the image -->
+                <div class="standard-price">${{ formatPrice(beer.cost_per_standard) }}   / drink</div>
               </div>
             </div>
           </div>
