@@ -122,7 +122,7 @@ header h1 {
 /* Container */
 .container {
   max-width: 1200px;
-  margin: 2rem auto;
+  margin: 0.5rem auto;  /* Reduced from 2rem to 0.5rem */
   padding: 0 1rem;
 }
 
@@ -134,7 +134,7 @@ header h1 {
 
 /* Row styling */
 .row {
-  margin-bottom: 1rem;
+  margin-bottom: 0.25rem;  /* Reduced from 0.5rem to 0.25rem */
   text-align: center;
 }
 
@@ -143,10 +143,10 @@ header h1 {
   /* Use .fixed-width container for centering */
 }
 .input-search {
-  padding: 0.6rem;
+  padding: 0.4rem;  /* Reduced from 0.6rem to 0.4rem */
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 1rem;
+  font-size: 0.9rem;  /* Slightly smaller font */
   width: 100%;
   text-align: left;
 }
@@ -161,12 +161,12 @@ header h1 {
 /* Filter Buttons */
 .filter-button {
   flex: 1;
-  padding: 0.6rem;
+  padding: 0.4rem;  /* Reduced from 0.6rem to 0.4rem */
   border: 1px solid #ccc;
   border-radius: 4px;
   background: #FFC107;  /* Default yellow background */
   color: #000;
-  font-size: 1rem;
+  font-size: 0.9rem;  /* Slightly smaller font */
   margin: 0 0.2rem;
   cursor: pointer;
   transition: background 0.3s;
@@ -349,10 +349,10 @@ header h1 {
 }
 
 .input-search {
-  padding: 0.6rem;
+  padding: 0.4rem;  /* Reduced from 0.6rem to 0.4rem */
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 1rem;
+  font-size: 0.9rem;  /* Slightly smaller font */
   width: 100%;
   text-align: left;
 }
@@ -365,7 +365,7 @@ header h1 {
 /* Filters section animation */
 .filters-section {
   transition: all 0.3s ease-in-out;
-  margin-top: 1rem;
+  margin-top: 0.25rem;  /* Reduced from 0.5rem to 0.25rem */
 }
 
 /* Sticky filters */
@@ -374,14 +374,14 @@ header h1 {
   top: 0;
   background: #f4f7f6;
   z-index: 100;
-  padding: 1rem 0;
+  padding: 0.25rem 0;  /* Reduced from 0.5rem to 0.25rem */
   border-bottom: 1px solid #e0e0e0;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* Add padding to main content to prevent jump when filters become sticky */
 .main-content {
-  padding-top: 1rem;
+  padding-top: 0.5rem;  /* Reduced from 1rem to 0.5rem */
 }
 
 /* Ensure filters are readable when sticky */
