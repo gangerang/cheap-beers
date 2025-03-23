@@ -12,6 +12,7 @@ new Vue({
     selectedVessels: ["can", "bottle", "longneck"],
     selectedStrengths: ["Light", "Mid", "Full", "Strong"],
     selectedRatings: ["Crap", "Ok", "Great", "Legendary"],
+    showInfo: false,
   },
   computed: {
     // Flatten each beer record into separate pricing “cards.”
@@ -365,7 +366,10 @@ new Vue({
       if (params.has("ratings")) {
         this.selectedRatings = params.get("ratings").split(",");
       }
-    }
+    },
+    toggleInfo() {
+      this.showInfo = !this.showInfo;
+    },
   },
   created() {
     this.applyUrlParams();

@@ -13,8 +13,34 @@
 <body>
   <div id="app">
     <header>
-      <!-- Double-clicking this heading will copy the shareable URL to the clipboard -->
-      <h1 @dblclick="copyUrl">Cheap Beers</h1>
+      <div class="header-content">
+        <h1 @dblclick="copyUrl">Cheap Beers</h1>
+        <button class="info-button" @click="toggleInfo">ℹ️</button>
+      </div>
+      
+      <!-- Info Modal -->
+      <div class="modal" v-if="showInfo" @click="toggleInfo">
+        <div class="modal-content" @click.stop>
+          <button class="close-button" @click="toggleInfo">×</button>
+          <h2>About Cheap Beers</h2>
+          <div class="modal-body">
+            <p><strong>Created by:</strong> Alex Allchin</p>
+            <p><strong>Purpose:</strong> Find the cheapest beers at Dan Murphy's based on cost per standard drink. What other metric could you possibly want? :P</p>
+            <p><strong>How to use:</strong></p>
+            <ul>
+              <li>Results are sorted by cost per standard drink, from cheapest to most expensive. Use the filters and search box to find the best beer for you.</li>
+              <li>Click on a beer to open it on the Dan Murphy's website.</li>
+              <li>Double-click "Cheap Beers" to copy a shareable URL with your current filters, so you can go straight back to your favourties each time.</li>
+            </ul>
+            <p><strong>Links:</strong></p>
+            <ul>
+              <li>Copyright &copy 2025 Alex Allchin <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY NC SA</a></li>
+              <li>Check out the code on <a href="https://github.com/gangerang/cheap-beers" target="_blank">GitHub</a></li>
+              <li>Project inspired by <a href="https://alculator.zachmanson.com" target="_blank">Alculator</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </header>
     <div class="container">
       
