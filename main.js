@@ -106,9 +106,14 @@ new Vue({
         });
       }
       
-      // Search filter: check that every search word appears in a few key fields.
+      // Search filter: check if any search terms match (OR logic)
       if (this.searchQuery) {
-        const words = this.searchQuery.trim().toLowerCase().split(/\s+/);
+        const searchTerms = this.searchQuery
+          .split(/[,;|]/)                    // Split by , ; or |
+          .map(term => term.trim())      // Trim whitespace
+          .filter(term => term.length)   // Remove empty terms
+          .map(term => term.toLowerCase());  // Convert to lowercase
+
         available = available.filter(beer => {
           const searchable = [
             beer.name || '',
@@ -117,7 +122,12 @@ new Vue({
             beer.size ? beer.size.toString() : '',
             beer.package_size ? beer.package_size.toString() : ''
           ].join(' ').toLowerCase();
-          return words.every(word => searchable.includes(word));
+
+          // Match if ANY of the search terms are found (OR logic)
+          return searchTerms.some(term => {
+            const words = term.split(/\s+/);  // Split term into words
+            return words.every(word => searchable.includes(word));  // All words in term must match
+          });
         });
       }
       
