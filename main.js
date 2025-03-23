@@ -21,6 +21,7 @@ new Vue({
     selectedStrengths: [...DEFAULTS.STRENGTHS],
     selectedRatings: [...DEFAULTS.RATINGS],
     showInfo: false,
+    showToast: false
   },
   computed: {
     // Flatten each beer record into separate pricing “cards.”
@@ -301,7 +302,10 @@ new Vue({
     copyUrl() {
       const shareUrl = this.buildShareUrl();
       navigator.clipboard.writeText(shareUrl).then(() => {
-        alert("URL copied to clipboard:\n" + shareUrl);
+        this.showToast = true;
+        setTimeout(() => {
+          this.showToast = false;
+        }, 2000);
       }).catch(err => {
         console.error("Error copying URL: ", err);
       });

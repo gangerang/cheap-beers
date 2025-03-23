@@ -141,6 +141,12 @@
         <button @click="loadMore" class="btn-load-more">Load More</button>
       </div>
     </div>
+
+    <!-- Toast notification -->
+    <div class="toast" v-if="showToast">
+      Search options saved as a URL
+    </div>
+
   </div>
   
   <!-- Vue.js -->
