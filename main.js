@@ -9,7 +9,8 @@ new Vue({
     displayLimit: LOAD_COUNT,
     includeSpecials: true,            // Specials filter: when true, use special pricing if available.
     selectedPackages: ["single", "pack", "case"],  // Filter by base package type.
-    selectedVessels: ["can", "bottle", "longneck"]
+    selectedVessels: ["can", "bottle", "longneck"],
+    selectedStrengths: ["Light", "Mid", "Full", "Extra full"]
   },
   computed: {
     // Flatten each beer record into separate pricing “cards.”
@@ -32,6 +33,8 @@ new Vue({
           } else if (beer.pricing[pkgType]) {
             pricingData = beer.pricing[pkgType];
           }
+          const strengthCategory = this.computeStrengthCategory(beer.properties.percentage_raw);
+          const strengthIcon = this.computeStrengthEmoji(strengthCategory);
           // If pricing exists, add the flattened card.
           if (pricingData) {
             result.push({
@@ -41,6 +44,8 @@ new Vue({
               brand: beer.properties.brand,
               size: beer.properties.size_clean,                // Use the clean size.
               percentage: beer.properties.percentage_raw,        // Use raw percentage.
+              strengthCategory,
+              strengthIcon,
               standard_drinks: beer.properties.standard_drinks_clean, // Use clean standard drinks.
               vessel: beer.properties.vessel,
               // Build the full image URL using the provided image name.
@@ -65,6 +70,11 @@ new Vue({
     // Apply search, vessel filtering and sort on the flattened beer cards.
     filteredBeers() {
       let available = this.flattenedBeers.filter(beer => beer && beer.name);
+
+      // Filter by strength category.
+      if (this.selectedStrengths.length > 0) {
+        available = available.filter(beer => this.selectedStrengths.includes(beer.strengthCategory));
+      }
       
       // Search filter: check that every search word appears in a few key fields.
       if (this.searchQuery) {
@@ -161,6 +171,44 @@ new Vue({
           }
         } else {
           this.selectedVessels.push(vessel);
+        }
+      }
+    },
+    // strength code
+    computeStrengthCategory(percentage) {
+      if (percentage < 3) return "Light";
+      if (percentage <= 4) return "Mid";
+      if (percentage <= 5.5) return "Full";
+      return "Extra full";
+    },
+    computeStrengthEmoji(category) {
+      switch (category) {
+        case "Light": return "🍺";
+        case "Mid": return "🍺🍺";
+        case "Full": return "🍺🍺🍺";
+        case "Extra full": return "🍺🍺🍺🍺";
+        default: return "";
+      }
+    },
+    toggleStrength(strength) {
+      const allStrengths = ["Light", "Mid", "Full", "Extra full"];
+      // If all are selected, clicking one selects only that one.
+      if (this.selectedStrengths.length === allStrengths.length) {
+        this.selectedStrengths = [strength];
+      }
+      // If only one is active and it's clicked again, reset to all.
+      else if (this.selectedStrengths.length === 1 && this.selectedStrengths[0] === strength) {
+        this.selectedStrengths = [...allStrengths];
+      }
+      // Otherwise, toggle in/out as normal.
+      else {
+        if (this.selectedStrengths.includes(strength)) {
+          this.selectedStrengths = this.selectedStrengths.filter(s => s !== strength);
+          if (this.selectedStrengths.length === 0) {
+            this.selectedStrengths = [...allStrengths];
+          }
+        } else {
+          this.selectedStrengths.push(strength);
         }
       }
     },

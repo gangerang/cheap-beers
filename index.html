@@ -17,14 +17,15 @@
       <h1 @dblclick="copyUrl">Cheap Beers</h1>
     </header>
     <div class="container">
-      <!-- ... rest of your content remains unchanged ... -->
+      
       <div class="row">
         <div class="fixed-width">
           <input type="text" v-model="searchQuery" placeholder="find your beer..." class="input-search">
         </div>
       </div>
       
-      <!-- Filter buttons and beer grid (unchanged) -->
+      <!-- Filter buttons and beer grid -->
+      <!-- special + single/pack/case -->
       <div class="row">
         <div class="fixed-width filter-row">
           <button class="filter-button" :class="{'active': includeSpecials}" @click="toggleSpecials">Specials</button>
@@ -34,6 +35,7 @@
         </div>
       </div>
       
+      <!-- reset + vessel -->
       <div class="row">
         <div class="fixed-width filter-row">
           <button class="filter-button reset-button" @click="resetFilters">Reset</button>
@@ -42,6 +44,33 @@
           <button class="filter-button" :class="{'active': selectedVessels.includes('longneck')}" @click="toggleVessel('longneck')">Longneck</button>
         </div>
       </div>
+
+      <!-- strength -->
+      <div class="row">
+        <div class="fixed-width filter-row">
+          <button class="filter-button" 
+                  :class="{'active': selectedStrengths.includes('Light')}" 
+                  @click="toggleStrength('Light')">
+            Light
+          </button>
+          <button class="filter-button" 
+                  :class="{'active': selectedStrengths.includes('Mid')}" 
+                  @click="toggleStrength('Mid')">
+            Mid
+          </button>
+          <button class="filter-button" 
+                  :class="{'active': selectedStrengths.includes('Full')}" 
+                  @click="toggleStrength('Full')">
+            Full
+          </button>
+          <button class="filter-button" 
+                  :class="{'active': selectedStrengths.includes('Extra full')}" 
+                  @click="toggleStrength('Extra full')">
+            Extra full
+          </button>
+        </div>
+      </div>
+      
       
       <div v-if="displayedBeers.length === 0 && searchQuery && beers.length > 0" class="no-results">
         No beers match your search query.
@@ -60,6 +89,7 @@
                 <div class="beer-info"><span>Type:</span> {{ packagingInfo(beer) }}</div>
                 <div class="beer-info"><span>Standard drinks:</span> {{ beer.standard_drinks || 'N/A' }}</div>
                 <div class="beer-info"><span>Alcohol %:</span> {{ beer.percentage || 'N/A' }}</div>
+                <div class="beer-info"><span>Strength:</span> {{ beer.strengthIcon }}</div>                
                 <div class="beer-info"><span>Unit price:</span> ${{ formatPrice(beer.unit_price) }}</div>
                 <div class="beer-info">
                   <span>Total price:</span> ${{ formatPrice(beer.total_price) }}{{ beer.package_special ? " on special" : "" }}
