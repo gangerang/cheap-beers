@@ -11,7 +11,7 @@ new Vue({
     selectedPackages: ["single", "pack", "case"],  // Filter by base package type.
     selectedVessels: ["can", "bottle", "longneck"],
     selectedStrengths: ["Light", "Mid", "Full", "Strong"],
-    selectedRatings: ["crap", "ok", "Great", "Legendary"],
+    selectedRatings: ["Crap", "Ok", "Great", "Legendary"],
   },
   computed: {
     // Flatten each beer record into separate pricing “cards.”
