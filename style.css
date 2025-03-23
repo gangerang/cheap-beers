@@ -110,13 +110,14 @@ header h1 {
   margin-bottom: 0.5rem;
 }
 
+/* Modal link styles */
 .modal-body a {
-  color: #FFC107;
+  color: #0066cc;  /* Standard blue color */
   text-decoration: underline;
 }
 
 .modal-body a:hover {
-  color: #FFA000;
+  color: #004499;  /* Darker blue on hover */
 }
 
 /* Container */
